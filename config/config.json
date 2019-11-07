@@ -1,0 +1,8 @@
+{
+  "compileData": "../data/compile.json",
+  "userData": "../data/user.json",
+  "matchData": "../data/match.json",
+  "binRoot": "../bin/",
+  "scoreBoundary": 50,
+  "maxMatchCnt": 10
+}
