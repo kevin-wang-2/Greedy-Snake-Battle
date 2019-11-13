@@ -3,6 +3,7 @@
   "userData": "../data/user.json",
   "matchData": "../data/match.json",
   "binRoot": "../bin/",
+  "matchRoot": "../match/",
   "scoreBoundary": 50,
   "maxMatchCnt": 10
 }

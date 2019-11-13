@@ -4,7 +4,7 @@
 
 let { spawn } = require("child_process");
 
-export function Pipe(command) {
+function Pipe(command) {
     this.shellObj = spawn(command);
     this.stdout = "";
     this.stderr = "";

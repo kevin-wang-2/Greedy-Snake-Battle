@@ -10,27 +10,40 @@ const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 let matchCnt = 0;
 
 (function begin() {
-    setInterval(() => {
+    setTimeout(() => {
         if(matchCnt > config["maxMatchCnt"]) return;
-        let match = Match(); // Initialize a match
+        let match = new Match(); // Initialize a match
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         let uidA, uidB;
         do {
-            uidA = Math.random() * userData.length;
+            uidA = Math.floor(Math.random() * userData.length);
             let filtered = utils.filter(userData,
                 (a) => {
-                    return Math.abs(a["data"]["score"] - userData[uidA]["score"]) < config["scoreBoundary"]
+                    return (Math.abs(a.data["score"] - userData[uidA]["score"]) < config["scoreBoundary"] && a.id !== uidA);
                 });
-            uidB = filtered[Math.random() * filtered.length].id;
+            uidB = filtered[Math.floor(Math.random() * filtered.length)].id;
         } while(userData[uidA]["bin"] === "" || userData[uidB]["bin"] === "");
 
-        match.setExecutable(userData[uidA]["bin"], userData[uidB]["bin"]);
+        match.setExecutable(config["binRoot"] + userData[uidA]["bin"], config["binRoot"] +userData[uidB]["bin"]);
         matchCnt++;
         match.execute((result) => {
             let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
-            matchData.push({userA:uidA, userB:uidB, result: result, details:match.record});
-            fs.writeFileSync(config["matchData"], matchData.stringify());
+            matchData.push({userA:uidA, userB:uidB, result: result, details:matchData.length.toString() + ".txt"});
+            fs.writeFile(config["matchRoot"] + (matchData.length - 1).toString() + ".match", JSON.stringify(match.record), () => {});
+            fs.writeFileSync(config["matchData"], JSON.stringify(matchData));
+
+            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            if(result.winner === 1) {
+                let scoreA = userData[uidB]["score"], scoreB = userData[uidB]["score"];
+                userData[uidA]["score"] += 10 * (Math.max(scoreA - scoreB, 1));
+                userData[uidB]["score"] -= 10 * (Math.max(scoreA - scoreB, 1));
+            } else {
+                let scoreA = userData[uidB]["score"], scoreB = userData[uidB]["score"];
+                userData[uidA]["score"] -= 10 * (Math.max(scoreB - scoreA, 1));
+                userData[uidB]["score"] += 10 * (Math.max(scoreB - scoreA, 1));
+            }
             matchCnt--;
+            fs.writeFileSync(config["userData"], JSON.stringify(userData));
         })
-    }, 1000);
+    }, 0);
 })();
