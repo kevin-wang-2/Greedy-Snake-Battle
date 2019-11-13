@@ -4,10 +4,14 @@
 
 let {spawn} = require("child_process");
 let Game = require("./game.js").Game;
+const fs = require("fs");
+
+const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
 function Match() {
     this.record = [];
     this.game = new Game();
+    this.roundsLeft = config["maxRounds"];
 }
 
 Match.prototype.setExecutable = function(A, B) {
@@ -76,6 +80,18 @@ Match.prototype.execute = function(callback) {
         this.procB.stdin.write([this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
         this.procA.stdin.write(opB.toString() + "\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
         this.procA.stdout.once("data", fnProcA);
+
+        this.roundsLeft--;
+        if (this.roundsLeft < 0) {
+            this.procA.kill();
+            this.procB.kill();
+            if (this.game.snakeA.getLength() > this.game.snakeB.getLength())
+                callback({winner: 1, error: errors});
+            else if (this.game.snakeA.getLength() === this.game.snakeB.getLength())
+                callback({winner: 0, error: errors});
+            else
+                callback({winner: 2, error: errors});
+        }
     };
     this.procA.stdout.once("data", fnProcA);
 };
