@@ -2,12 +2,10 @@
  * Execute two programs and hold a match
  */
 
-let events = require("events");
 let {spawn} = require("child_process");
 let Game = require("./game.js").Game;
 
 function Match() {
-    this.events = new events.EventEmitter();
     this.record = [];
     this.game = new Game();
 }
