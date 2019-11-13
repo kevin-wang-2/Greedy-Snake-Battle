@@ -4,6 +4,7 @@
   "matchData": "../data/match.json",
   "binRoot": "../bin/",
   "matchRoot": "../match/",
+  "uiRoot": "../ui/",
   "scoreBoundary": 50,
   "maxMatchCnt": 10
 }

@@ -5,6 +5,10 @@
 const fs = require("fs");
 const Match = require("./execute.js").Match;
 const utils = require("./util.js");
+const app = require("./httpServer.js").app;
+
+require("./scoreDispServer").setRouter(app);
+
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
 let matchCnt = 0;
@@ -47,4 +51,6 @@ let matchCnt = 0;
             fs.writeFileSync(config["userData"], JSON.stringify(userData));
         })
     }, 1000);
+
+    app.listen(8000);
 })();
