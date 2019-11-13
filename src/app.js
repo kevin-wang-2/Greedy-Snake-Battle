@@ -21,6 +21,7 @@ let matchCnt = 0;
                 (a) => {
                     return (Math.abs(a.data["score"] - userData[uidA]["score"]) < config["scoreBoundary"] && a.id !== uidA);
                 });
+            if (filtered.length === 0) return;
             uidB = filtered[Math.floor(Math.random() * filtered.length)].id;
         } while(userData[uidA]["bin"] === "" || userData[uidB]["bin"] === "");
 
