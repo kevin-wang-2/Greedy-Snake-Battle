@@ -11,7 +11,6 @@ function Match() {
     this.events = new events.EventEmitter();
     this.record = [];
     this.game = new Game();
-    console.log(this.game)
 }
 
 Match.prototype.setExecutable = function(A, B) {
@@ -22,11 +21,6 @@ Match.prototype.setExecutable = function(A, B) {
 
     this.procA.stdin.on("error", (msg) => {console.log("A:" + msg);});
     this.procB.stdin.on("error", (msg) => {console.log("B:" + msg);});
-
-
-    console.log("MsgA:" + "1\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n" +
-    [this.game.snakeA.data[0].x.toString(), this.game.snakeA.data[0].y.toString()].join(" ") + "\n" +
-    [this.game.snakeB.data[0].x.toString(), this.game.snakeB.data[0].y.toString()].join(" ") + "\n");
 
     this.procA.stdin.write("1\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n" +
         [this.game.snakeA.data[0].x.toString(), this.game.snakeA.data[0].y.toString()].join(" ") + "\n" +
@@ -51,18 +45,6 @@ Match.prototype.execute = function(callback) {
         }
         let opA = parseInt(data.toString());
         status = this.game.makeTurn("A", opA);
-        execSync("clear");
-        for(let i=0;i<this.game.borderX;i++) {
-            let line = "";
-            for(let j=0;j<this.game.borderY;j++) {
-                if(this.game.snakeA.indexOf(new Vector(i, j)) !== -1) line += "*";
-                else if(this.game.snakeB.indexOf(new Vector(i, j)) !== -1) line += "+";
-                else if(i === this.game.food.x && j === this.game.food.y) line += "0";
-                else line += "-";
-            }
-            console.log(line);
-        }
-        console.log("A: " + opA);
         if(!status) { // A loses
             this.procA.kill();
             this.procB.kill();
@@ -85,18 +67,6 @@ Match.prototype.execute = function(callback) {
             return;
         }
         let opB = parseInt(data.toString());
-        execSync("clear");
-        for(let i=0;i<this.game.borderX;i++) {
-            let line = "";
-            for(let j=0;j<this.game.borderY;j++) {
-                if(this.game.snakeA.indexOf(new Vector(i, j)) !== -1) line += "*";
-                else if(this.game.snakeB.indexOf(new Vector(i, j)) !== -1) line += "+";
-                else if(i === this.game.food.x && j === this.game.food.y) line += "0";
-                else line += "-";
-            }
-            console.log(line);
-        }
-        console.log("B: " + opB);
         status = this.game.makeTurn("B", opB);
         if(!status) { // B loses
             this.procA.kill();

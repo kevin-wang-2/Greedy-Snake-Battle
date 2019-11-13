@@ -10,7 +10,7 @@ const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 let matchCnt = 0;
 
 (function begin() {
-    setTimeout(() => {
+    setInterval(() => {
         if(matchCnt > config["maxMatchCnt"]) return;
         let match = new Match(); // Initialize a match
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -45,5 +45,5 @@ let matchCnt = 0;
             matchCnt--;
             fs.writeFileSync(config["userData"], JSON.stringify(userData));
         })
-    }, 0);
+    }, 1000);
 })();
