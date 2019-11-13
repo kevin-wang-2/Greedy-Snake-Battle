@@ -33,8 +33,13 @@ let matchCnt = 0;
         matchCnt++;
         match.execute((result) => {
             let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
-            matchData.push({userA:uidA, userB:uidB, result: result, details:matchData.length.toString() + ".txt"});
-            fs.writeFile(config["matchRoot"] + (matchData.length - 1).toString() + ".match", JSON.stringify(match.record), () => {});
+            let matchName = (new Date()).valueOf().toString() + ".match";
+            matchData.push({userA: uidA, userB: uidB, result: result, details: matchName});
+            if (matchData.length > config["maxMatchRecord"]) {
+                fs.unlinkSync(config["matchRoot"] + matchData.shift()["details"]);
+            }
+            fs.writeFile(config["matchRoot"] + matchName, JSON.stringify(match.record), () => {
+            });
             fs.writeFileSync(config["matchData"], JSON.stringify(matchData));
 
             let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -42,10 +47,19 @@ let matchCnt = 0;
                 let scoreA = userData[uidB]["score"], scoreB = userData[uidB]["score"];
                 userData[uidA]["score"] += 10 * (Math.max(scoreA - scoreB, 1));
                 userData[uidB]["score"] -= 10 * (Math.max(scoreA - scoreB, 1));
-            } else {
+                userData[uidA]["win"]++;
+                userData[uidB]["lose"]++;
+            } else if (result.winner === 2) {
                 let scoreA = userData[uidB]["score"], scoreB = userData[uidB]["score"];
                 userData[uidA]["score"] -= 10 * (Math.max(scoreB - scoreA, 1));
                 userData[uidB]["score"] += 10 * (Math.max(scoreB - scoreA, 1));
+                userData[uidB]["win"]++;
+                userData[uidA]["lose"]++;
+            } else {
+                userData[uidA]["score"] += 5 * (scoreB - scoreA);
+                userData[uidB]["score"] -= 5 * (scoreB - scoreA);
+                userData[uidB]["draw"]++;
+                userData[uidA]["draw"]++;
             }
             matchCnt--;
             fs.writeFileSync(config["userData"], JSON.stringify(userData));

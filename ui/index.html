@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" class="page--scoreboard">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/general.css"/>
+    <title>Main - Greedy Snake Lab</title>
+</head>
+<body>
+<nav class="nav">
+    <div class="row">
+        <div class="column nav__container">
+            <ol class="nav__container-item">
+                <li>
+                    <a href="/" class="nav__logo">GreedySnakeJudge</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item active">Scoreboard</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Submission</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Match</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">About</a>
+                </li>
+            </ol>
+            <ol class="nav__container-item">
+                <li>
+                    <a href="" class="nav__button">Sign in</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+</nav>
+<div class="slideout-panel" id="panel">
+    <div class="main">
+        <div class="row">
+            <div class="columns">
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">
+                            <span class="icon icon-warning text-red"></span>
+                            Version Beta 1.0.0
+                        </h1>
+                    </div>
+                    <div class="section__body">
+                        <p>Beta test open for TAs and instructor</p>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">Current Scoreboard</h1>
+                        <div class="section__tools">Update at:
+                            <span id="refreshTime"></span>
+                            (refresh per minute)
+                        </div>
+                    </div>
+                    <div class="section__body no-padding">
+                        <div class="section__table-container">
+                            <table class="data-table section__table-header">
+                                <colgroup>
+                                    <col class="col--rank">
+                                    <col class="col--user">
+                                    <col class="col--score">
+                                    <col class="col--wins">
+                                    <col class="col--loses">
+                                    <col class="col--draws">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th class="col--rank">Rank</th>
+                                    <th class="col--user">User</th>
+                                    <th class="col--score">Rating</th>
+                                    <th class="col--wins">Win</th>
+                                    <th class="col--loses">Lose</th>
+                                    <th class="col--draws">Draw</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <table class="data-table">
+                                <colgroup>
+                                    <col class="col--rank">
+                                    <col class="col--user">
+                                    <col class="col--score">
+                                    <col class="col--wins">
+                                    <col class="col--loses">
+                                    <col class="col--draws">
+                                </colgroup>
+                                <tbody id="datagrid">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jQuery.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

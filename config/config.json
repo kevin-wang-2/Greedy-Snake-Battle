@@ -6,5 +6,6 @@
   "matchRoot": "../match/",
   "uiRoot": "../ui/",
   "scoreBoundary": 50,
-  "maxMatchCnt": 10
+  "maxMatchCnt": 10,
+  "maxMatchRecord": 100
 }

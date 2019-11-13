@@ -26,7 +26,12 @@ function setRouter(app) {
 
     app.get("/getMatchDetail", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
-        let data = JSON.parse(fs.readFileSync(config["matchRoot"] + urlquery["match"] + ".match").toString());
+        try {
+            let data = JSON.parse(fs.readFileSync(config["matchRoot"] + urlquery["match"] + ".match").toString());
+        } catch (e) {
+            res.send("[]");
+            return;
+        }
         let start = (urlquery["page"] - 1) * 10;
         let end = start + 10;
 
@@ -41,11 +46,7 @@ function setRouter(app) {
     app.get("/getScoreBoard", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-        if (!urlquery["page"]) {
-            res.send(JSON.stringify(sort(userData, "score").slice(0, 10)));
-        } else {
-            res.send(JSON.stringify(sort(userData, "score").slice((urlquery["page"] - 1) * 10, urlquery["page"] * 10)));
-        }
+        res.send(JSON.stringify(sort(userData, "score")));
     });
 }
 
