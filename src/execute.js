@@ -3,9 +3,8 @@
  */
 
 let events = require("events");
-let {spawn, execSync} = require("child_process");
+let {spawn} = require("child_process");
 let Game = require("./game.js").Game;
-let Vector = require("./vector").Vector;
 
 function Match() {
     this.events = new events.EventEmitter();
