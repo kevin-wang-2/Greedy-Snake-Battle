@@ -8,5 +8,6 @@
   "scoreBoundary": 50,
   "maxMatchCnt": 10,
   "maxMatchRecord": 100,
-  "maxRoundCnt": 10000
+  "maxRoundCnt": 1000,
+  "testEnv": 1
 }

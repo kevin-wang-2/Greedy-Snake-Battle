@@ -6,6 +6,7 @@ const url = require("url");
 const querystring = require('querystring');
 const fs = require("fs");
 const sort = require("./util.js").sort;
+const session = require('express-session');
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
@@ -44,9 +45,18 @@ function setRouter(app) {
     });
 
     app.get("/getScoreBoard", (req, res) => {
-        let urlquery = querystring.parse(url.parse(req.url).query);
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         res.send(JSON.stringify(sort(userData, "score")));
+    });
+
+    app.get("/getUserInfo", (req, res) => {
+        let urlquery = querystring.parse(url.parse(req.url).query);
+        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        if (urlquery["userID"]) {
+            res.end(JSON.stringify(userData[parseInt(urlquery["userID"].toString())]));
+        } else {
+            res.end();
+        }
     });
 }
 

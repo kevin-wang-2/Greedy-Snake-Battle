@@ -3,7 +3,7 @@
         const trTemplate = "<tr>\n" +
             "                                    <td class=\"col--rank\">#${rank}</td>\n" +
             "                                    <td class=\"col--user\">\n" +
-            "                                        <a href=\"/user/${userid}\">\n" +
+            "                                        <a href=\"/userDisp/${userid}\">\n" +
             "                                            <span class=\"player\" style=\"color:red;font-weight:bold;\">${username}</span>\n" +
             "                                        </a>\n" +
             "                                    </td>\n" +
