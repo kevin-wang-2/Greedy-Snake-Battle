@@ -36,6 +36,13 @@ function setRouter(app) {
             res.redirect("/oauth/fake_jaccount.html");
         }
     });
+
+
+    app.post("/oauth/logout", (req, res) => {
+        req.session.token = null;
+        req.session.userID = null;
+        res.redirect("/");
+    });
 }
 
 exports.setRouter = setRouter;

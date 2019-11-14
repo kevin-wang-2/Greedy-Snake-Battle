@@ -9,5 +9,6 @@
   "maxMatchCnt": 10,
   "maxMatchRecord": 100,
   "maxRoundCnt": 1000,
-  "testEnv": 1
+  "testEnv": 1,
+  "CSRFKey": "ABCDEFGH"
 }

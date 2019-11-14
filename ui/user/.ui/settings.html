@@ -52,13 +52,12 @@
     <div class="main">
         <div class="row">
             <div class="medium-9 columns">
-
                 <div class="section">
                     <div class="section__header">
-                        <h1 class="section__title">My Profile</h1>
+                        <h1 class="section__title">Settings</h1>
                     </div>
                     <div class="section__body">
-                        <form method="post">
+                        <form method="post" action="/user/settings">
                             {{if post}}
                             <div class="typo">
                                 <blockquote class="success">
@@ -68,27 +67,21 @@
                             {{/if}}
                             <div class="row">
                                 <div class="medium-5 columns">
-                                    <label>Student ID</label>
-                                    <input type="text" name="studentId" class="textbox" readonly=""
-                                           value="{{studentID}}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="medium-5 columns">
-                                    <label>Real Name (required)</label>
-                                    <input type="text" name="realname" class="textbox" autofocus="" value="{{realname}}"
-                                           required="">
-                                    <p class="help-text">Your real name is only visible to TAs. Others will not know who
-                                        you are.</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="medium-5 columns">
-                                    <label>Display Name (required)</label>
-                                    <input type="text" name="name" class="textbox" value="{{name}}"
-                                           required="">
-                                    <p class="help-text">Will be displayed <span class="text-red">publicly</span> in
-                                        scoreboard.</p>
+                                    <label>Default Compiler</label>
+                                    <select class="select" name="compiler">
+                                        <option value="c++98" {{if compiler=="c++98"}}selected{{/if}}>GNU C++ 7.2.0 (-O3
+                                            -std=c++98)
+                                        </option>
+                                        <option value="c++11" {{if compiler=="c++11"}}selected{{/if}}>GNU C++ 7.2.0 (-O3
+                                            -std=c++11)
+                                        </option>
+                                        <option value="c++14" {{if compiler=="c++14"}}selected{{/if}}>GNU C++ 7.2.0 (-O3
+                                            -std=c++14)
+                                        </option>
+                                        <option value="c++17" {{if compiler=="c++17"}}selected{{/if}}>GNU C++ 7.2.0 (-O3
+                                            -std=c++17)
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -100,20 +93,19 @@
                         </form>
                     </div>
                 </div>
-
             </div>
             <div class="medium-3 columns">
                 <div data-sticky="medium">
                     <div class="section side">
                         <ol class="menu">
                             <li class="menu__item">
-                                <a href="/user/profile" class="menu__link active">
+                                <a href="/user/profile" class="menu__link">
                                     <span class="icon icon-account--circle"></span>
                                     My Profile
                                 </a>
                             </li>
                             <li class="menu__item">
-                                <a href="/user/settings" class="menu__link">
+                                <a href="/user/settings" class="menu__link active">
                                     <span class="icon icon-wrench"></span>
                                     Settings
                                 </a>

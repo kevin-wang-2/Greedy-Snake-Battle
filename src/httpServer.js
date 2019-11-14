@@ -9,6 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const bodyParser = require('body-parser');
 const session = require('express-session');
+//const CSRF = require("./validation/CSRFJar.js");
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
@@ -55,7 +56,60 @@ app.use((req, res, next) => {
 });
 
 app.get("/user/profile", (req, res) => {
-    res.render(config["uiRoot"] + "/user/.ui/profile.html")
+    let uid = req.session.userID;
+    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+    let cur = userData[uid];
+    res.render(config["uiRoot"] + "/user/.ui/profile.html", {
+        studentID: cur["studentID"],
+        realname: cur["realname"],
+        name: cur["name"],
+        token: req.session.token.toString(),
+        post: false
+    });
+});
+
+app.post("/user/profile", (req, res) => {
+    let uid = req.session.userID;
+    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+    userData[uid]["realname"] = req.body["realname"].replace(/^\<script.*\>$/, "I'm fool");
+    userData[uid]["name"] = req.body["name"].replace(/^\<script.*\>$/, "I'm fool");
+    fs.writeFileSync(config["userData"], JSON.stringify(userData));
+    let cur = userData[uid];
+    res.render(config["uiRoot"] + "/user/.ui/profile.html", {
+        studentID: cur["studentID"],
+        realname: cur["realname"],
+        name: cur["name"],
+        token: req.session.token.toString(),
+        post: true
+    });
+});
+
+app.use("/user/.ui", (req, res) => {
+    res.header(404);
+});
+
+app.get("/user/settings", (req, res) => {
+    let uid = req.session.userID;
+    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+    let cur = userData[uid];
+    res.render(config["uiRoot"] + "/user/.ui/settings.html", {
+        compiler: cur["default-compiler"],
+        token: req.session.token.toString(),
+        post: false
+    });
+});
+
+app.post("/user/settings", (req, res) => {
+    let uid = req.session.userID;
+    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+    userData[uid]["default-compiler"] = req.body["compiler"];
+    fs.writeFileSync(config["userData"], JSON.stringify(userData));
+    let cur = userData[uid];
+    res.render(config["uiRoot"] + "/user/.ui/settings.html", {
+        compiler: cur["default-compiler"],
+        token: req.session.token.toString(),
+        post: true
+    });
 });
 
 exports.app = app;
