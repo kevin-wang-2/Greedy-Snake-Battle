@@ -59,34 +59,28 @@
                     </div>
                     <div class="section__body no-padding">
                         <div class="section__table-container">
-                            <table class="data-table section__table-header">
+                            <table class="data-table submissions-table section__table-header" style="">
                                 <colgroup>
-                                    <col class="col--rank">
-                                    <col class="col--user">
-                                    <col class="col--score">
-                                    <col class="col--wins">
-                                    <col class="col--loses">
-                                    <col class="col--draws">
+                                    <col class="col--status submission-status--border">
+                                    <col class="col--time">
+                                    <col class="col--by">
+                                    <col class="col--compiler">
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th class="col--rank">Rank</th>
-                                    <th class="col--user">User</th>
-                                    <th class="col--score">Rating</th>
-                                    <th class="col--wins">Win</th>
-                                    <th class="col--loses">Lose</th>
-                                    <th class="col--draws">Draw</th>
+                                    <th class="col--status submission-status--border">Status</th>
+                                    <th class="col--time">At</th>
+                                    <th class="col--by">By</th>
+                                    <th class="col--compiler">Compiler</th>
                                 </tr>
                                 </thead>
                             </table>
-                            <table class="data-table">
+                            <table class="data-table submissions-table">
                                 <colgroup>
-                                    <col class="col--rank">
-                                    <col class="col--user">
-                                    <col class="col--score">
-                                    <col class="col--wins">
-                                    <col class="col--loses">
-                                    <col class="col--draws">
+                                    <col class="col--status submission-status--border">
+                                    <col class="col--time">
+                                    <col class="col--by">
+                                    <col class="col--compiler">
                                 </colgroup>
                                 <tbody id="datagrid">
                                 </tbody>
@@ -100,8 +94,8 @@
     <div class="footer">
     </div>
 </div>
-<script src="js/jQuery.js"></script>
-<script src="general.js"></script>
-<script src="main.js"></script>
+<script src="/js/jQuery.js"></script>
+<script src="/general.js"></script>
+<script src="mysubmissions.js"></script>
 </body>
 </html>

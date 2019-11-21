@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/general.css"/>
+    <title>My Profile - GreedySnake</title>
+</head>
+<body>
+<nav class="nav">
+    <div class="row">
+        <div class="column nav__container">
+            <ol class="nav__container-item">
+                <li>
+                    <a href="/" class="nav__logo">GreedySnakeJudge</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Scoreboard</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Submission</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Match</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">About</a>
+                </li>
+            </ol>
+            <ol class="nav__container-item">
+                <li id="signin">
+                    <a href="/oauth/login" class="nav__button">Sign in</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+</nav>
+<div class="slideout-panel slideout-panel-left" id="panel">
+    <nav class="nav--slideout-trigger">
+        <div class="row">
+            <div class="columns">
+                <button type="button" class="nav__hamburger">
+                    <div class="hamburger hamburger--spin">
+          <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+          </span>
+                    </div>
+                    Menu
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="main">
+        <div class="row">
+            <div class="columns">
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">
+                            <span class="icon icon-warning text-red"></span>
+                            You are not logged in.
+                        </h1>
+                    </div>
+                    <div class="section__body">
+                        <p>Please log in first.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+</div>
+<script src="/js/jQuery.js"></script>
+<script src="/general.js"></script>
+<script src="submissions.js"></script>
+</body>
+</html>

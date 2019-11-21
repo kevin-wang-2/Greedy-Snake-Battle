@@ -7,9 +7,6 @@ const Match = require("./execute.js").Match;
 const utils = require("./util.js");
 const app = require("./httpServer.js").app;
 
-require("./scoreDispServer").setRouter(app);
-require("./auth.js").setRouter(app);
-
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
 let matchCnt = 0;

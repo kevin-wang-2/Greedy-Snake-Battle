@@ -9,6 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const multer = require("multer");
 //const CSRF = require("./validation/CSRFJar.js");
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
@@ -41,6 +42,21 @@ app.use("/user", (req, res, next) => {
         next();
     }
 });
+app.use("/submission", (req, res, next) => {
+    if (!req.session.token) {
+        res.render(config["uiRoot"] + "/submission/.ui/nologin.html")
+    } else {
+        next();
+    }
+});
+
+app.use("/user/.ui", (req, res) => {
+    res.header(404);
+});
+
+app.use("/submission/.ui", (req, res) => {
+    res.header(404);
+});
 
 app.use((req, res, next) => {
     if (fs.existsSync(config["uiRoot"] + url.parse(req.url).pathname)) {
@@ -55,61 +71,8 @@ app.use((req, res, next) => {
     } else next();
 });
 
-app.get("/user/profile", (req, res) => {
-    let uid = req.session.userID;
-    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-    let cur = userData[uid];
-    res.render(config["uiRoot"] + "/user/.ui/profile.html", {
-        studentID: cur["studentID"],
-        realname: cur["realname"],
-        name: cur["name"],
-        token: req.session.token.toString(),
-        post: false
-    });
-});
-
-app.post("/user/profile", (req, res) => {
-    let uid = req.session.userID;
-    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-    userData[uid]["realname"] = req.body["realname"].replace(/^\<script.*\>$/, "I'm fool");
-    userData[uid]["name"] = req.body["name"].replace(/^\<script.*\>$/, "I'm fool");
-    fs.writeFileSync(config["userData"], JSON.stringify(userData));
-    let cur = userData[uid];
-    res.render(config["uiRoot"] + "/user/.ui/profile.html", {
-        studentID: cur["studentID"],
-        realname: cur["realname"],
-        name: cur["name"],
-        token: req.session.token.toString(),
-        post: true
-    });
-});
-
-app.use("/user/.ui", (req, res) => {
-    res.header(404);
-});
-
-app.get("/user/settings", (req, res) => {
-    let uid = req.session.userID;
-    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-    let cur = userData[uid];
-    res.render(config["uiRoot"] + "/user/.ui/settings.html", {
-        compiler: cur["default-compiler"],
-        token: req.session.token.toString(),
-        post: false
-    });
-});
-
-app.post("/user/settings", (req, res) => {
-    let uid = req.session.userID;
-    let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-    userData[uid]["default-compiler"] = req.body["compiler"];
-    fs.writeFileSync(config["userData"], JSON.stringify(userData));
-    let cur = userData[uid];
-    res.render(config["uiRoot"] + "/user/.ui/settings.html", {
-        compiler: cur["default-compiler"],
-        token: req.session.token.toString(),
-        post: true
-    });
-});
+require("./ui/user.js").setRouter(app);
+require("./dataDisp/scoreDispServer").setRouter(app);
+require("./ui/auth.js").setRouter(app);
 
 exports.app = app;
