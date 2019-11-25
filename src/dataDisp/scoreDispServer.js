@@ -9,7 +9,7 @@ const sort = require("../util.js").sort;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
-function setRouter(app) {
+exports.setRouter = function (app) {
     app.get("/getMatchData", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
         let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
@@ -82,6 +82,4 @@ function setRouter(app) {
             res.end(JSON.stringify(retJSON.reverse()));
         }
     });
-}
-
-exports.setRouter = setRouter;
+};

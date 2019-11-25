@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
-function setRouter(app) {
+exports.setRouter = function (app) {
     app.get("/user/profile", (req, res) => {
         let uid = req.session.userID;
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -56,6 +56,4 @@ function setRouter(app) {
             post: true
         });
     });
-}
-
-exports.setRouter = setRouter;
+};

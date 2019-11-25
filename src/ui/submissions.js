@@ -4,7 +4,7 @@ const compile = require("../compiler/compileTools.js").compile;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
-function setRouter(app) {
+exports.setRouter = function (app) {
     app.get("/submission", (req, res) => {
         res.render(config["uiRoot"] + "/submission/.ui/mysubmissions.html");
     });
@@ -41,6 +41,4 @@ function setRouter(app) {
             post: true
         });
     });
-}
-
-exports.setRouter = setRouter;
+};

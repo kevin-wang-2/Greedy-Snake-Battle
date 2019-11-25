@@ -4,7 +4,7 @@ const querystring = require("querystring");
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
-function setRouter(app) {
+exports.setRouter = function (app) {
     app.post("/oauth", (req, res) => {
         let params = querystring.parse(url.parse(req.url).query);
         if (params["fake"]) {
@@ -43,6 +43,4 @@ function setRouter(app) {
         req.session.userID = null;
         res.redirect("/");
     });
-}
-
-exports.setRouter = setRouter;
+};
