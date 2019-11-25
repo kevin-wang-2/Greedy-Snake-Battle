@@ -3,13 +3,12 @@
  */
 
 let exec = require("child_process").exec;
-let events = require("events");
 
 let compiler = {
-    "C++98": "g++ %source -o %exec -std=c++98 -lm -Werror -Wall %flags",
-    "C++11": "g++ %source -o %exec -std=c++11 -lm -Werror -Wall %flags",
-    "C++14": "g++ %source -o %exec -std=c++14 -lm -Werror -Wall %flags",
-    "C++17": "g++ %source -o %exec -std=c++17 -lm -Werror -Wall %flags"
+    "c++98": "g++ %source -o %exec -std=c++98 -lm -Werror -Wall %flags",
+    "c++11": "g++ %source -o %exec -std=c++11 -lm -Werror -Wall %flags",
+    "c++14": "g++ %source -o %exec -std=c++14 -lm -Werror -Wall %flags",
+    "c++17": "g++ %source -o %exec -std=c++17 -lm -Werror -Wall %flags"
 };
 
 function Compiler(language = "C++17") {

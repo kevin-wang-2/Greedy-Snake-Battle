@@ -23,11 +23,11 @@
         {text: "Compile Error", style: "ce"},
     ];
 
-    $.get("getSubmissions", function (data) {
+    $.get("/getSubmissionList", function (data) {
         var JSONData = JSON.parse(data);
         for (var i = 0; i < JSONData.length; i++) {
-            var cur = trtemplate.replace(/\${status}/, errCodeList[parseInt(JSONData[i]["status"])].style)
-                .replace(/\${status_cap}}/, errCodeList[parseInt(JSONData[i]["status"])].text)
+            var cur = trtemplate.replace(/\${status}/g, errCodeList[parseInt(JSONData[i]["status"])]["style"])
+                .replace(/\${status_cap}/, errCodeList[parseInt(JSONData[i]["status"])]["text"])
                 .replace(/\${time}/, JSONData[i]["time"])
                 .replace(/\${username}/, JSONData[i]["username"])
                 .replace(/\${compiler}/, JSONData[i]["compiler"]);

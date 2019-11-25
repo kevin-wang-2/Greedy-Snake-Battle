@@ -2,7 +2,7 @@
 <html lang="en" class="page--scoreboard">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/general.css"/>
+    <link rel="stylesheet" href="/css/general.css"/>
     <title>Main - Greedy Snake Lab</title>
 </head>
 <body>
@@ -14,10 +14,10 @@
                     <a href="/" class="nav__logo">GreedySnakeJudge</a>
                 </li>
                 <li>
-                    <a href="/" class="nav__item active">Scoreboard</a>
+                    <a href="/" class="nav__item">Scoreboard</a>
                 </li>
                 <li>
-                    <a href="/submission" class="nav__item">Submission</a>
+                    <a href="/submission" class="nav__item active">Submission</a>
                 </li>
                 <li>
                     <a href="/" class="nav__item">Match</a>
@@ -37,7 +37,7 @@
 <div class="slideout-panel" id="panel">
     <div class="main">
         <div class="row">
-            <div class="columns">
+            <div class="medium-9 columns">
                 <div class="section">
                     <div class="section__header">
                         <h1 class="section__title">
@@ -89,6 +89,29 @@
                     </div>
                 </div>
             </div>
+            <div class="medium-3 columns">
+                <div data-sticky="medium">
+                    <div class="section side">
+                        <div class="section__header">
+                            <h1 class="section__title">Submission</h1>
+                        </div>
+                        <ol class="menu">
+                            <li class="menu__item">
+                                <a href="/submission" class="menu__link active">
+                                    <span class="icon icon-flag"></span>
+                                    My Submissions
+                                </a>
+                            </li>
+                            <li class="menu__item">
+                                <a href="/submission/submit" class="menu__link">
+                                    <span class="icon icon-send"></span>
+                                    Submit New Brain
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="footer">
@@ -96,6 +119,6 @@
 </div>
 <script src="/js/jQuery.js"></script>
 <script src="/general.js"></script>
-<script src="mysubmissions.js"></script>
+<script src="/submission/mysubmissions.js"></script>
 </body>
 </html>

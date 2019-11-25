@@ -57,6 +57,9 @@ app.use("/user/.ui", (req, res) => {
 app.use("/submission/.ui", (req, res) => {
     res.header(404);
 });
+app.use("/match/.ui", (req, res) => {
+    res.header(404);
+});
 
 app.use((req, res, next) => {
     if (fs.existsSync(config["uiRoot"] + url.parse(req.url).pathname)) {
@@ -74,5 +77,6 @@ app.use((req, res, next) => {
 require("./ui/user.js").setRouter(app);
 require("./dataDisp/scoreDispServer").setRouter(app);
 require("./ui/auth.js").setRouter(app);
+require("./ui/submissions.js").setRouter(app);
 
 exports.app = app;
