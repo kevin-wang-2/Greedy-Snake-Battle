@@ -8,10 +8,10 @@
   "uiRoot": "../ui/",
   "submissionRoot": "../submission/",
   "studentList": "../config/studentList.json",
-  "scoreBoundary": 50,
+  "scoreBoundary": 100,
   "maxMatchCnt": 10,
   "maxMatchRecord": 100,
-  "maxRoundCnt": 1000,
+  "maxRounds": 1000,
   "testEnv": 1,
   "CSRFKey": "ABCDEFGH",
   "PwdSalt": "ABCDEFGH"

@@ -6,6 +6,7 @@ const url = require("url");
 const querystring = require('querystring');
 const fs = require("fs");
 const sort = require("../util.js").sort;
+const unorderFilter = require("../util.js").filter;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
@@ -14,23 +15,40 @@ exports.setRouter = function (app) {
         let urlquery = querystring.parse(url.parse(req.url).query);
         let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-        if (urlquery["count"]) {
-            res.send(matchData.length.toString());
-        } else {
+        if (urlquery["filter"]) {
+            let filteredMatchData = unorderFilter(matchData, (cur) => {
+                return cur["data"]["userA"] === req.session.userID || cur["data"]["userB"] === req.session.userID;
+            });
             let outputJSON = [];
-            for (let i = (parseInt(urlquery["page"]) - 1) * 20; i < Math.min(parseInt(urlquery["page"]) * 20, matchData.length); i++) {
-                let user1 = userData[parseInt(matchData[i]["userA"])];
-                let user2 = userData[parseInt(matchData[i]["userB"])];
+            for (let i = (parseInt(urlquery["page"]) - 1) * 20; i < Math.min(parseInt(urlquery["page"]) * 20, filteredMatchData.length); i++) {
+                let user1 = userData[parseInt(matchData[filteredMatchData[i].id]["userA"])];
+                let user2 = userData[parseInt(matchData[filteredMatchData[i].id]["userB"])];
                 outputJSON.push({
-                    matchid: matchData.length - i - 1,
-                    status: matchData[i]["result"]["winner"],
+                    matchid: matchData.length - filteredMatchData[i].id - 1,
+                    status: matchData[filteredMatchData[i].id]["result"]["winner"],
                     user1: {id: user1["uid"], name: user1["name"], rating: user1["score"]}
                     ,
                     user2: {id: user2["uid"], name: user2["name"], rating: user2["score"]}
                 });
             }
             res.send(JSON.stringify(outputJSON));
+            return;
         }
+
+        let outputJSON = [];
+        for (let i = (parseInt(urlquery["page"]) - 1) * 20; i < Math.min(parseInt(urlquery["page"]) * 20, matchData.length); i++) {
+            let user1 = userData[parseInt(matchData[i]["userA"])];
+            let user2 = userData[parseInt(matchData[i]["userB"])];
+            outputJSON.push({
+                matchid: matchData.length - i - 1,
+                status: matchData[i]["result"]["winner"],
+                user1: {id: user1["uid"], name: user1["name"], rating: user1["score"]}
+                ,
+                user2: {id: user2["uid"], name: user2["name"], rating: user2["score"]}
+            });
+        }
+        res.send(JSON.stringify(outputJSON));
+
     });
 
     app.get("/getMatchDetail", (req, res) => {

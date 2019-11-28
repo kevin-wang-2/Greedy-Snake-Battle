@@ -83,10 +83,6 @@ Match.prototype.execute = function(callback) {
             return;
         }
         this.record.push({user:2, operation:opB, valid:true, food: [this.game.food.x, this.game.food.y]});
-        this.procB.stdin.write([this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
-        this.procA.stdin.write(opB.toString() + "\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
-        this.procA.stdout.once("data", fnProcA);
-
         this.roundsLeft--;
         if (this.roundsLeft < 0) {
             this.procA.kill();
@@ -97,7 +93,11 @@ Match.prototype.execute = function(callback) {
                 callback({winner: 0, error: errors});
             else
                 callback({winner: 2, error: errors});
+            return;
         }
+        this.procB.stdin.write([this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
+        this.procA.stdin.write(opB.toString() + "\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
+        this.procA.stdout.once("data", fnProcA);
     };
     this.procA.stdout.once("data", fnProcA);
 };

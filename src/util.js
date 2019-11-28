@@ -6,6 +6,14 @@ function filter(list, fn) {
     return newlist;
 }
 
+function unorderFilter(list, fn) {
+    let newlist = [];
+    for (let i = 0; i < list.length; i++) {
+        if (fn({id: i, data: list[i]})) newlist.push(list[i]);
+    }
+    return newlist;
+}
+
 function mergeSort(arr, key) {
     let len = arr.length;
     if (len < 2) return arr;
@@ -34,4 +42,5 @@ function merge(left, right, key) {
 }
 
 exports.filter = filter;
+exports.unorderFilter = unorderFilter;
 exports.sort = mergeSort;

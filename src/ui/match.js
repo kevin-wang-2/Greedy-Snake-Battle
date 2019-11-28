@@ -1,6 +1,8 @@
 const url = require("url");
+const querystring = require('querystring');
 const fs = require("fs");
 const generatePager = require("./templateRender.js").generatePager;
+const unorderFilter = require("../util.js").unorderFilter;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
@@ -8,7 +10,7 @@ exports.setRouter = function (app) {
     const matchList = (req, res) => {
         let path = url.parse(req.url).path.split("/");
         let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
-        let pageCnt = matchData.length / 20;
+        let pageCnt = Math.floor(matchData.length / 20);
 
         if (path[path.length - 1] === "match" || path.length < 2 || (path.length >= 2 && path[path.length - 1] === "")) {
             res.render(config["uiRoot"] + "/match/.ui/list.html", {
@@ -43,4 +45,19 @@ exports.setRouter = function (app) {
             matchId: curMatch["details"]
         })
     });
+
+    app.get("/resetPager", (req, res) => {
+        let urlquery = querystring.parse(url.parse(req.url).query);
+        let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
+
+        if (urlquery["filter"]) {
+            matchData = unorderFilter(matchData, (cur) => {
+                return cur.data["userA"] === req.session.userID || cur.data["userB"] === req.session.userID;
+            });
+        }
+
+        let pageCnt = Math.floor(matchData.length / 20);
+        res.send(generatePager(pageCnt, 1, "match/list"));
+
+    })
 };

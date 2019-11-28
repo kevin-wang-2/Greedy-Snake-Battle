@@ -54,4 +54,54 @@ prepare = function (document, $, page) {
             $("#datagrid").html($("#datagrid").html() + cur);
         }
     });
+
+    $(document).ready(function () {
+            var filter_on = false;
+            $("#filter").click(function () {
+                if (!filter_on) {
+                    $.get("/getMatchList?filter=1&page=1", function (data) {
+                        $("#datagrid").html("");
+                        var JSONData = JSON.parse(data);
+                        for (var i = 0; i < JSONData.length; i++) {
+                            var cur = trtemplate.replace(/\${status_style}/g, errCodeList[parseInt(JSONData[i]["status"])]["style"])
+                                .replace(/\${matchid}/g, JSONData[i]["matchid"])
+                                .replace(/\${status}/g, errCodeList[parseInt(JSONData[i]["status"])]["text"])
+                                .replace(/\${user1_id}/g, JSONData[i]["user1"]["id"])
+                                .replace(/\${user2_id}/g, JSONData[i]["user2"]["id"])
+                                .replace(/\${user1_name}/g, JSONData[i]["user1"]["name"])
+                                .replace(/\${user2_name}/g, JSONData[i]["user2"]["name"])
+                                .replace(/\${user1_rating}/g, JSONData[i]["user1"]["rating"])
+                                .replace(/\${user2_rating}/g, JSONData[i]["user2"]["rating"]);
+                            $("#datagrid").html($("#datagrid").html() + cur);
+                        }
+                    });
+                    $.get("/resetPager?filter=1", function (data) {
+                        $(".pager").html(data);
+                    });
+                    filter_on = true;
+                } else {
+                    $.get("/getMatchList?page=1", function (data) {
+                        $("#datagrid").html("");
+                        var JSONData = JSON.parse(data);
+                        for (var i = 0; i < JSONData.length; i++) {
+                            var cur = trtemplate.replace(/\${status_style}/g, errCodeList[parseInt(JSONData[i]["status"])]["style"])
+                                .replace(/\${matchid}/g, JSONData[i]["matchid"])
+                                .replace(/\${status}/g, errCodeList[parseInt(JSONData[i]["status"])]["text"])
+                                .replace(/\${user1_id}/g, JSONData[i]["user1"]["id"])
+                                .replace(/\${user2_id}/g, JSONData[i]["user2"]["id"])
+                                .replace(/\${user1_name}/g, JSONData[i]["user1"]["name"])
+                                .replace(/\${user2_name}/g, JSONData[i]["user2"]["name"])
+                                .replace(/\${user1_rating}/g, JSONData[i]["user1"]["rating"])
+                                .replace(/\${user2_rating}/g, JSONData[i]["user2"]["rating"]);
+                            $("#datagrid").html($("#datagrid").html() + cur);
+                        }
+                    });
+                    $.get("/resetPager", function (data) {
+                        $(".pager").html(data);
+                    });
+                    filter_on = false;
+                }
+            })
+        }
+    )
 };
