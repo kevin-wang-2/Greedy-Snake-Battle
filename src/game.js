@@ -26,8 +26,6 @@ Game.prototype.makeTurn = function(user, op) {
     let direction = opValue[op];
     if(user === "A") {
         let newTail = this.snakeA.last().add(direction);
-        newTail.x %= this.borderX;
-        newTail.y %= this.borderY;
         if(newTail.x !== this.food.x || newTail.y !== this.food.y) {
             this.snakeA.dequeue();
         } else this.regenerateFood();
@@ -36,8 +34,6 @@ Game.prototype.makeTurn = function(user, op) {
         return this.snakeB.indexOf(newTail) === -1 && !outOfBorder(this, newTail);
     } else {
         let newTail = this.snakeB.last().add(direction);
-        newTail.x %= this.borderX;
-        newTail.y %= this.borderY;
         if(newTail.x !== this.food.x || newTail.y !== this.food.y) {
             this.snakeB.dequeue();
         } else this.regenerateFood();

@@ -10,15 +10,24 @@ const sort = require("../util.js").sort;
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
 exports.setRouter = function (app) {
-    app.get("/getMatchData", (req, res) => {
+    app.get("/getMatchList", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
-        let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
+        let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
+        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         if (urlquery["count"]) {
             res.send(matchData.length.toString());
         } else {
             let outputJSON = [];
-            for (let i = urlquery["start"]; i <= urlquery["end"]; i++) {
-                outputJSON.push(matchData[i]);
+            for (let i = (parseInt(urlquery["page"]) - 1) * 20; i < Math.min(parseInt(urlquery["page"]) * 20, matchData.length); i++) {
+                let user1 = userData[parseInt(matchData[i]["userA"])];
+                let user2 = userData[parseInt(matchData[i]["userB"])];
+                outputJSON.push({
+                    matchid: matchData.length - i - 1,
+                    status: matchData[i]["result"]["winner"],
+                    user1: {id: user1["uid"], name: user1["name"], rating: user1["score"]}
+                    ,
+                    user2: {id: user2["uid"], name: user2["name"], rating: user2["score"]}
+                });
             }
             res.send(JSON.stringify(outputJSON));
         }
@@ -26,18 +35,25 @@ exports.setRouter = function (app) {
 
     app.get("/getMatchDetail", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
+        let data;
         try {
-            let data = JSON.parse(fs.readFileSync(config["matchRoot"] + urlquery["match"] + ".match").toString());
+            data = JSON.parse(fs.readFileSync(config["matchRoot"] + urlquery["match"]).toString());
         } catch (e) {
             res.send("[]");
             return;
         }
-        let start = (urlquery["page"] - 1) * 10;
-        let end = start + 10;
 
         let outputJSON = [];
-        for (; start < Math.min(end, data.length); start++) {
-            outputJSON.push(data[start]);
+
+        if (parseInt(urlquery["page"]) === 0) {
+            outputJSON.push(data[0]);
+        } else {
+            let start = (urlquery["page"] - 1) * 50 + 1;
+            let end = start + 50;
+
+            for (; start < Math.min(end, data.length); start++) {
+                outputJSON.push(data[start]);
+            }
         }
 
         res.send(JSON.stringify(outputJSON));

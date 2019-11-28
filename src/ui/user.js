@@ -20,8 +20,10 @@ exports.setRouter = function (app) {
     app.post("/user/profile", (req, res) => {
         let uid = req.session.userID;
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-        userData[uid]["realname"] = req.body["realname"].replace(/^\<script.*\>$/, "I'm fool");
-        userData[uid]["name"] = req.body["name"].replace(/^\<script.*\>$/, "I'm fool");
+        userData[uid]["realname"] = req.body["realname"].replace(/\</g, "&lt;")
+            .replace(/\>/g, "&gt;");
+        userData[uid]["name"] = req.body["name"].replace(/\</g, "&lt;")
+            .replace(/\>/g, "&gt;");
         fs.writeFileSync(config["userData"], JSON.stringify(userData));
         let cur = userData[uid];
         res.render(config["uiRoot"] + "/user/.ui/profile.html", {

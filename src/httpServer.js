@@ -9,7 +9,6 @@ const fs = require("fs");
 const path = require("path");
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const multer = require("multer");
 //const CSRF = require("./validation/CSRFJar.js");
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
@@ -42,7 +41,8 @@ app.use("/user", (req, res, next) => {
         next();
     }
 });
-app.use("/submission", (req, res, next) => {
+
+app.use("/submission/", (req, res, next) => {
     if (!req.session.token) {
         res.render(config["uiRoot"] + "/submission/.ui/nologin.html")
     } else {
@@ -78,5 +78,6 @@ require("./ui/user.js").setRouter(app);
 require("./dataDisp/scoreDispServer").setRouter(app);
 require("./ui/auth.js").setRouter(app);
 require("./ui/submissions.js").setRouter(app);
+require("./ui/match.js").setRouter(app);
 
 exports.app = app;

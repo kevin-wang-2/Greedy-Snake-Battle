@@ -30,6 +30,12 @@ Match.prototype.setExecutable = function(A, B) {
     this.procB.stdin.write("0\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n" +
         [this.game.snakeB.data[0].x.toString(), this.game.snakeB.data[0].y.toString()].join(" ") + "\n" +
         [this.game.snakeA.data[0].x.toString(), this.game.snakeA.data[0].y.toString()].join(" ") + "\n");
+
+    this.record.push({
+        birthA: [this.game.snakeA.data[0].x, this.game.snakeA.data[0].y],
+        birthB: [this.game.snakeB.data[0].x, this.game.snakeB.data[0].y],
+        food: [this.game.food.x, this.game.food.y]
+    });
 };
 
 Match.prototype.execute = function(callback) {
