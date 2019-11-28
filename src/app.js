@@ -12,20 +12,22 @@ const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 let matchCnt = 0;
 
 (function begin() {
+    app.listen(8000);
+
     setInterval(() => {
         if(matchCnt > config["maxMatchCnt"]) return;
         let match = new Match(); // Initialize a match
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         let uidA, uidB;
-        do {
-            uidA = Math.floor(Math.random() * userData.length);
-            let filtered = utils.filter(userData,
-                (a) => {
-                    return (Math.abs(a.data["score"] - userData[uidA]["score"]) < config["scoreBoundary"] && a.id !== uidA);
-                });
-            if (filtered.length === 0) return;
-            uidB = filtered[Math.floor(Math.random() * filtered.length)].id;
-        } while(userData[uidA]["bin"] === "" || userData[uidB]["bin"] === "");
+        uidA = Math.floor(Math.random() * userData.length);
+        let filtered = utils.filter(userData,
+            (a) => {
+                return (Math.abs(a.data["score"] - userData[uidA]["score"]) < config["scoreBoundary"] && a.id !== uidA);
+            });
+        if (filtered.length === 0) return;
+        uidB = filtered[Math.floor(Math.random() * filtered.length)].id;
+
+        if (userData[uidA]["bin"] === "" || userData[uidB]["bin"] === "") return;
 
         match.setExecutable(config["binRoot"] + userData[uidA]["bin"], config["binRoot"] +userData[uidB]["bin"]);
         matchCnt++;
@@ -64,5 +66,4 @@ let matchCnt = 0;
         })
     }, 1000);
 
-    app.listen(8000);
 })();

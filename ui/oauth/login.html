@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" class="page--login">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/general.css"/>
+    <title>Student Login - Greedy Snake Lab</title>
+</head>
+<body>
+<nav class="nav">
+    <div class="row">
+        <div class="column nav__container">
+            <ol class="nav__container-item">
+                <li>
+                    <a href="/" class="nav__logo">GreedySnakeJudge</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Scoreboard</a>
+                </li>
+                <li>
+                    <a href="/submission" class="nav__item">Submission</a>
+                </li>
+                <li>
+                    <a href="/match" class="nav__item">Match</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+</nav>
+<div class="slideout-panel" id="panel">
+    <div class="main">
+        <div class="row">
+            <div class="columns">
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">
+                            <span class="icon icon-warning text-red"></span>
+                            Student Login
+                        </h1>
+                    </div>
+                    <div class="section__body">
+                        {{if fail}}
+                        <div class="typo">
+                            <blockquote class="success">
+                                Login Failure.
+                            </blockquote>
+                        </div>
+                        {{/if}}
+                        <form method="post" action="/oauth">
+                            <div class="row">
+                                <div class="medium-5 columns">
+                                    <label>Student ID</label>
+                                    <input type="text" name="studentId" class="textbox" required="">
+                                    <p class="help-text">When you log in for the first time, we will automatically
+                                        create an account for you.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="medium-5 columns">
+                                    <label>Password</label>
+                                    <input type="password" name="password" class="textbox" required="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="medium-5 columns">
+                                    <input type="hidden" name="_csrf" value="{{token}}">
+                                    <button class="primary rounded button" type="submit">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+</div>
+<script src="js/jQuery.js"></script>
+<script src="/general.js"></script>
+</body>
+</html>
