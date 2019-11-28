@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="layout--basic page--match_list hasjs">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/general.css"/>
+    <title>Main - Greedy Snake Lab</title>
+</head>
+<body>
+<nav class="nav">
+    <div class="row">
+        <div class="column nav__container">
+            <ol class="nav__container-item">
+                <li>
+                    <a href="/" class="nav__logo">GreedySnakeJudge</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Scoreboard</a>
+                </li>
+                <li>
+                    <a href="/submission" class="nav__item">Submission</a>
+                </li>
+                <li>
+                    <a href="/match" class="nav__item active">Match</a>
+                </li>
+            </ol>
+            <ol class="nav__container-item">
+                <li id="signin">
+                    <a href="/oauth/login" class="nav__button">Sign in</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+</nav>
+<div class="slideout-panel" id="panel">
+    <div class="main">
+        <div class="row">
+            <div class="columns">
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">
+                            <span class="icon icon-warning text-red"></span>
+                            Version Beta 1.0.0
+                        </h1>
+                    </div>
+                    <div class="section__body">
+                        <p>Beta test open for TAs and instructor</p>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">Game between {{user1}} and {{user2}}</h1>
+                    </div>
+                    <div class="section__body">
+                        <ol class="supplementary dot list">
+                            <li><span class="round-status--text win">{{if winner != 0}}
+              <span class="icon round-status--icon win"></span>
+              Win
+              :
+                {{if winner == 1}}
+                {{user1}}
+                {{else}}
+                {{user2}}
+                {{/if}}
+              <div class="field-icon field--{{if winner == 1}}black{{else}}white{{/if}}"></div>
+            </span>
+                            </li>
+                            <li><span class="round-status--text lose">
+              <span class="icon round-status--icon lose"></span>
+              Lose
+              :
+                {{if winner == 2}}
+                {{user1}}
+                {{else}}
+                {{user2}}
+                {{/if}}
+              <div class="field-icon field--{{if winner == 2}}black{{else}}white{{/if}}"></div>
+            </span>
+                            </li>
+                        </ol>{{else}}
+                        <ol class="supplementary dot list">
+                            <li><span class="round-status--text draw">
+              <span class="icon round-status--icon draw"></span>
+              Draw
+              :
+                {{user1}}
+              <div class="field-icon field--black"></div>
+            </span>
+                            </li>
+                            <li><span class="round-status--text draw">
+              <span class="icon round-status--icon draw"></span>
+              Draw
+              :
+                {{user2}}
+              <div class="field-icon field--white"></div>
+            </span>
+                            </li>
+                        </ol>{{/if}}
+                    </div>
+                    <div class="section__body">
+                        <div class="board-container">
+                            <table class="board-table">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+</div>
+<script src="/js/jQuery.js"></script>
+<script src="/general.js"></script>
+<script src="/match/greedySnake.js">
+</script>
+<script>
+    prepare(document, $, "{{matchId}}")();
+</script>
+</body>
+</html>

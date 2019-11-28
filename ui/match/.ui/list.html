@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="page--scoreboard">
+<html lang="en" class="layout--basic page--match_list hasjs">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/general.css"/>
+    <link rel="stylesheet" href="/css/general.css"/>
     <title>Main - Greedy Snake Lab</title>
 </head>
 <body>
@@ -14,13 +14,13 @@
                     <a href="/" class="nav__logo">GreedySnakeJudge</a>
                 </li>
                 <li>
-                    <a href="/" class="nav__item active">Scoreboard</a>
+                    <a href="/" class="nav__item">Scoreboard</a>
                 </li>
                 <li>
                     <a href="/submission" class="nav__item">Submission</a>
                 </li>
                 <li>
-                    <a href="/match" class="nav__item">Match</a>
+                    <a href="/match" class="nav__item active">Match</a>
                 </li>
             </ol>
             <ol class="nav__container-item">
@@ -56,39 +56,39 @@
                     </div>
                     <div class="section__body no-padding">
                         <div class="section__table-container">
-                            <table class="data-table section__table-header">
+                            <table class="data-table section__table-header" style="">
                                 <colgroup>
-                                    <col class="col--rank">
-                                    <col class="col--user">
-                                    <col class="col--score">
-                                    <col class="col--wins">
-                                    <col class="col--loses">
-                                    <col class="col--draws">
+                                    <col class="col--status match-status--border">
+                                    <col class="col--challenger">
+                                    <col class="col--rating">
+                                    <col class="col--challengee">
+                                    <col class="col--rating">
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th class="col--rank">Rank</th>
-                                    <th class="col--user">User</th>
-                                    <th class="col--score">Rating</th>
-                                    <th class="col--wins">Win</th>
-                                    <th class="col--loses">Lose</th>
-                                    <th class="col--draws">Draw</th>
+                                    <th class="col--status match-status--border">Status</th>
+                                    <th class="col--challenger">Challenger</th>
+                                    <th class="col--rating">Rating</th>
+                                    <th class="col--challengee">Opponent</th>
+                                    <th class="col--rating">Rating</th>
                                 </tr>
                                 </thead>
                             </table>
-                            <table class="data-table">
+                            <table class="data-table submissions-table">
                                 <colgroup>
-                                    <col class="col--rank">
-                                    <col class="col--user">
-                                    <col class="col--score">
-                                    <col class="col--wins">
-                                    <col class="col--loses">
-                                    <col class="col--draws">
+                                    <col class="col--status match-status--border">
+                                    <col class="col--challenger">
+                                    <col class="col--rating">
+                                    <col class="col--challengee">
+                                    <col class="col--rating">
                                 </colgroup>
                                 <tbody id="datagrid">
                                 </tbody>
                             </table>
                         </div>
+                        <ul class="pager">
+                            {{@ pager}}
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -97,8 +97,12 @@
     <div class="footer">
     </div>
 </div>
-<script src="js/jQuery.js"></script>
-<script src="general.js"></script>
-<script src="main.js"></script>
+<script src="/js/jQuery.js"></script>
+<script src="/general.js"></script>
+<script src="/match/list.js">
+</script>
+<script>
+    prepare(document, $, parseInt("{{page}}"));
+</script>
 </body>
 </html>

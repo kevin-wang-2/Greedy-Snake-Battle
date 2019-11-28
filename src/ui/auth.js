@@ -73,7 +73,7 @@ exports.setRouter = function (app) {
                     };
                     userData.push(curData);
                     fs.writeFileSync(config["userData"], JSON.stringify(userData));
-                    req.session.token = sha512((new Date()).valueOf().toString(), userData[i]["studentID"] + config["CSRFKey"]).passwordHash;
+                    req.session.token = sha512((new Date()).valueOf().toString(), studentList[i]["studentID"] + config["CSRFKey"]).passwordHash;
                     req.session.userID = userData.length - 1;
                     res.redirect("/");
                     res.end();
