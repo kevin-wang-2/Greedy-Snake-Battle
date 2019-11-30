@@ -96,23 +96,7 @@
                             </li>
                         </ol>{{/if}}
                     </div>
-                    <div class="section__body">Exit caused by: {{if exit == 0}}
-                        Normal Exit
-                        {{else if exit == 1}}
-                        {{if winner == 1}}
-                        {{user2}}
-                        {{else}}
-                        {{user1}}
-                        {{/if}}
-                        Time Limit Exceeded
-                        {{else}}
-                        {{if winner == 1}}
-                        {{user2}}
-                        {{else}}
-                        {{user1}}
-                        {{/if}}
-                        Runtime Error
-                        {{/if}}
+                    <div class="section__body">Exit caused by: {{exit}}
                     </div>
                     <div class="section__body round">
                         <a class="text-challenger">{{user1}}: <span id="user1op"></span></a>

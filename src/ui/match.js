@@ -49,8 +49,7 @@ exports.setRouter = function (app) {
             user2: user2["name"],
             winner: curMatch["result"]["winner"],
             matchId: curMatch["details"],
-            exit: curMatch["result"]["error"].length === 0 ? 0 :
-                curMatch["result"]["error"]["msg"] === "Time Limit Exceeded" ? 1 : 2
+            exit: curMatch["result"]["error"].length === 0 ? "Normal Exit" : curMatch["result"]["error"]["msg"]
         })
     });
 
