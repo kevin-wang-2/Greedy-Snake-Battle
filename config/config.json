@@ -8,7 +8,7 @@
   "uiRoot": "../ui/",
   "submissionRoot": "../submission/",
   "studentList": "../config/studentList.json",
-  "scoreBoundary": 100,
+  "scoreBoundary": 1000000,
   "maxMatchCnt": 10,
   "maxMatchRecord": 100,
   "maxRounds": 1000,
