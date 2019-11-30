@@ -24,7 +24,7 @@ exports.setRouter = function (app) {
                 let user1 = userData[parseInt(matchData[filteredMatchData[i].id]["userA"])];
                 let user2 = userData[parseInt(matchData[filteredMatchData[i].id]["userB"])];
                 outputJSON.push({
-                    matchid: matchData.length - filteredMatchData[i].id - 1,
+                    matchid: matchData[filteredMatchData[i].id]["details"].split(".")[0],
                     status: matchData[filteredMatchData[i].id]["result"]["winner"],
                     user1: {id: user1["uid"], name: user1["name"], rating: user1["score"]}
                     ,
@@ -40,7 +40,7 @@ exports.setRouter = function (app) {
             let user1 = userData[parseInt(matchData[i]["userA"])];
             let user2 = userData[parseInt(matchData[i]["userB"])];
             outputJSON.push({
-                matchid: matchData.length - i - 1,
+                matchid: matchData[i]["details"].split(".")[0],
                 status: matchData[i]["result"]["winner"],
                 user1: {id: user1["uid"], name: user1["name"], rating: user1["score"]}
                 ,
@@ -107,7 +107,8 @@ exports.setRouter = function (app) {
                         status: submissionData[i]["status"],
                         time: submissionData[i]["time"],
                         username: userData[req.session.userID]["name"],
-                        compiler: submissionData[i]["compiler"]
+                        compiler: submissionData[i]["compiler"],
+                        id: i
                     };
                     retJSON.push(cur);
                 }
@@ -116,4 +117,21 @@ exports.setRouter = function (app) {
             res.end(JSON.stringify(retJSON.reverse()));
         }
     });
+
+    app.get("/getSubmissionDetail", (req, res) => {
+        if (!req.session.token) {
+            res.end("[]");
+        } else {
+            let urlquery = querystring.parse(url.parse(req.url).query);
+            let submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
+            console.log(submissionData[urlquery["id"]]);
+            let cur = {
+                status: submissionData[urlquery["id"]]["status"],
+                time: submissionData[urlquery["id"]]["time"],
+                compiler: submissionData[urlquery["id"]]["compiler"],
+                errorMsg: submissionData[urlquery["id"]]["error"]["stderr"].replace(/..\/submission\/.*\//g, "").replace(/\n/g, "<br>")
+            };
+            res.send(JSON.stringify(cur));
+        }
+    })
 };

@@ -2,7 +2,7 @@
     var trtemplate = "<tr>\n" +
         "      <td class=\"col--status submission-status--border ${status}\">\n" +
         "        <span class=\"icon submission-status--icon ${status}\"></span>\n" +
-        "        <a class=\"submission-status--text ${status}\">\n" +
+        "        <a class=\"submission-status--text ${status}\" href=\"/submission/check/${id}\">\n" +
         "          ${status_cap}\n" +
         "        </a>\n" +
         "      </td>\n" +
@@ -30,7 +30,8 @@
                 .replace(/\${status_cap}/, errCodeList[parseInt(JSONData[i]["status"])]["text"])
                 .replace(/\${time}/, JSONData[i]["time"])
                 .replace(/\${username}/, JSONData[i]["username"])
-                .replace(/\${compiler}/, JSONData[i]["compiler"]);
+                .replace(/\${compiler}/, JSONData[i]["compiler"])
+                .replace(/\${id}/g, JSONData[i]["id"]);
             $("#datagrid").html($("#datagrid").html() + cur);
         }
     });

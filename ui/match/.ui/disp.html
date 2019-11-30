@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/general.css"/>
-    <title>Main - Greedy Snake Lab</title>
+    <title>View a match - Greedy Snake Lab</title>
 </head>
 <body>
 <nav class="nav">
@@ -39,11 +39,11 @@
                     <div class="section__header">
                         <h1 class="section__title">
                             <span class="icon icon-warning text-red"></span>
-                            Version Beta 1.0.0
+                            Version 1.0.0
                         </h1>
                     </div>
                     <div class="section__body">
-                        <p>Beta test open for TAs and instructor</p>
+                        <p>Happy VG101 Lab8!</p>
                     </div>
                 </div>
                 <div class="section">
@@ -95,6 +95,28 @@
             </span>
                             </li>
                         </ol>{{/if}}
+                    </div>
+                    <div class="section__body">Exit caused by: {{if exit == 0}}
+                        Normal Exit
+                        {{else if exit == 1}}
+                        {{if winner == 1}}
+                        {{user2}}
+                        {{else}}
+                        {{user1}}
+                        {{/if}}
+                        Time Limit Exceeded
+                        {{else}}
+                        {{if winner == 1}}
+                        {{user2}}
+                        {{else}}
+                        {{user1}}
+                        {{/if}}
+                        Runtime Error
+                        {{/if}}
+                    </div>
+                    <div class="section__body round">
+                        <a class="text-challenger">{{user1}}: <span id="user1op"></span></a>
+                        <a class="text-opponent">{{user2}}: <span id="user2op"></span></a>
                     </div>
                     <div class="section__body">
                         <div class="board-container">

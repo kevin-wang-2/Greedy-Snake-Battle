@@ -41,7 +41,22 @@ Match.prototype.setExecutable = function(A, B) {
 Match.prototype.execute = function(callback) {
     let errors = [];
     let fnProcA, fnProcB;
+
+    this.tleA = () => {
+        this.procA.kill();
+        this.procB.kill();
+        errors.push({player: 1, msg: "Time Limit Exceeded"});
+        callback({winner: 2, error: errors});
+    };
+    this.tleB = () => {
+        this.procA.kill();
+        this.procB.kill();
+        errors.push({player: 2, msg: "Time Limit Exceeded"});
+        callback({winner: 1, error: errors});
+    };
+    this.tle = setTimeout(this.tleA, 1000);
     fnProcA = (data) => {
+        clearTimeout(this.tle);
         if(/^[0-3]$/.test(data.toString())) { // Error in A, B wins
             this.record.push({user:1, operation:data, valid:false});
             errors.push({player:1, msg:"Unexpected output!"});
@@ -62,9 +77,11 @@ Match.prototype.execute = function(callback) {
         this.record.push({user:1, operation:opA, valid:true, food: [this.game.food.x, this.game.food.y]});
         this.procA.stdin.write([this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
         this.procB.stdin.write(opA.toString() + "\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
+        this.tle = setTimeout(this.tleB, 1000);
         this.procB.stdout.once("data", fnProcB);
     };
     fnProcB = (data) => {
+        clearTimeout(this.tle);
         if((/^[0-3]$/.test(data.toString()))) { // Error in A, B wins
             this.record.push({user:2, operation:data, valid:false});
             errors.push({player:2, msg:"Unexpected output!"});
@@ -97,6 +114,7 @@ Match.prototype.execute = function(callback) {
         }
         this.procB.stdin.write([this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
         this.procA.stdin.write(opB.toString() + "\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
+        this.tle = setTimeout(this.tleA, 1000);
         this.procA.stdout.once("data", fnProcA);
     };
     this.procA.stdout.once("data", fnProcA);

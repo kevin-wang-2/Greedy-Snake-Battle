@@ -34,7 +34,13 @@ exports.setRouter = function (app) {
         let matchId = parseInt(path[path.length - 1]);
         let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-        let curMatch = matchData[matchId];
+        let curMatch = {};
+        for (let i = 0; i < matchData.length; i++) {
+            if (matchData[i]["details"] === matchId + ".match") {
+                curMatch = matchData[i];
+                break;
+            }
+        }
         let user1 = userData[curMatch["userA"]];
         let user2 = userData[curMatch["userB"]];
 
@@ -42,7 +48,9 @@ exports.setRouter = function (app) {
             user1: user1["name"],
             user2: user2["name"],
             winner: curMatch["result"]["winner"],
-            matchId: curMatch["details"]
+            matchId: curMatch["details"],
+            exit: curMatch["result"]["error"].length === 0 ? 0 :
+                curMatch["result"]["error"]["msg"] === "Time Limit Exceeded" ? 1 : 2
         })
     });
 

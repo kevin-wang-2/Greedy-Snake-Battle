@@ -83,7 +83,6 @@ prepare = function (document, $, matchId) {
     }
 
     function setCur(snakeA, snakeB, food, A_shift, B_shift) {
-
         if(A_shift.length !== 0) $("td.pos-" + A_shift.x.toString() + "-" + A_shift.y.toString()).css({backgroundColor: '#ffffff'});
         if(B_shift.length !== 0) $("td.pos-" + B_shift.x.toString() + "-" + B_shift.y.toString()).css({backgroundColor: '#ffffff'});
 
@@ -106,6 +105,7 @@ prepare = function (document, $, matchId) {
         });
     }
 
+    var directionText = ["LEFT", "UP", "RIGHT", "DOWN"];
 
     function run() {
         var game = new Game();
@@ -130,9 +130,11 @@ prepare = function (document, $, matchId) {
                     if (step["user"] === 1) {
                         A_shift = game.snakeA.data[0];
                         game.makeTurn("A", step["operation"]);
+                        $("#user1op").html(directionText[step["operation"]])
                     } else {
                         B_shift = game.snakeB.data[0];
                         game.makeTurn("B", step["operation"]);
+                        $("#user2op").html(directionText[step["operation"]])
                     }
                     game.food = new Vector(step["food"][0], step["food"][1]);
                     setCur(game.snakeA, game.snakeB, game.food, A_shift, B_shift);

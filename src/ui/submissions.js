@@ -1,4 +1,5 @@
 const fs = require("fs");
+const url = require("url");
 const execSync = require("child_process").execSync;
 const compile = require("../compiler/compileTools.js").compile;
 
@@ -41,4 +42,11 @@ exports.setRouter = function (app) {
             post: true
         });
     });
+
+    app.use("/submission/check", (req, res) => {
+        let path = url.parse(req.url).path.split("/");
+        res.render(config["uiRoot"] + "/submission/.ui/check.html", {
+            submissionId: parseInt(path[path.length - 1])
+        });
+    })
 };

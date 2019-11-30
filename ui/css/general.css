@@ -5334,6 +5334,23 @@ h1.section__title {
     float: right;
 }
 
+.round {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.round > a:last-child {
+    float: right;
+}
+
+.text-challenger {
+    color: #c7a16c;
+}
+
+.text-opponent {
+    color: #f95455;
+}
+
 .menu {
     padding: .3125rem 0;
     font-size: .875rem;
