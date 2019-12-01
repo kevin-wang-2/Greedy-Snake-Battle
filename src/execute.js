@@ -90,7 +90,7 @@ Match.prototype.execute = function(callback) {
         if(/^[0-3]$/.test(data.toString())) { // Error in A, B wins
             this.exit = true;
             this.record.push({user:1, operation:data, valid:false});
-            errors.push({player:1, msg:"Unexpected output!"});
+            errors.push({player: 1, msg: "Unexpected output " + data.toString() + "!"});
             this.procA.kill();
             this.procB.kill();
             callback({winner:2, error:errors});
@@ -100,7 +100,7 @@ Match.prototype.execute = function(callback) {
         if (opA < 0 || opA > 3) { // Error in A, B wins
             this.exit = true;
             this.record.push({user: 1, operation: data, valid: false});
-            errors.push({player: 1, msg: "Unexpected output!"});
+            errors.push({player: 1, msg: "Unexpected output " + opA.toString() + "!"});
             this.procA.kill();
             this.procB.kill();
             callback({winner: 2, error: errors});
@@ -126,7 +126,7 @@ Match.prototype.execute = function(callback) {
         if((/^[0-3]$/.test(data.toString()))) { // Error in A, B wins
             this.exit = true;
             this.record.push({user:2, operation:data, valid:false});
-            errors.push({player:2, msg:"Unexpected output!"});
+            errors.push({player: 2, msg: "Unexpected output " + data.toString() + "!"});
             this.procA.kill();
             this.procB.kill();
             callback({winner:1, error:errors});
@@ -136,7 +136,7 @@ Match.prototype.execute = function(callback) {
         if (opB < 0 || opB > 3) { // Error in A, B wins
             this.exit = true;
             this.record.push({user: 2, operation: data, valid: false});
-            errors.push({player: 2, msg: "Unexpected output!"});
+            errors.push({player: 2, msg: "Unexpected output " + opB.toString() + "!"});
             this.procA.kill();
             this.procB.kill();
             callback({winner: 1, error: errors});
