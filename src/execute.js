@@ -97,7 +97,7 @@ Match.prototype.execute = function(callback) {
             return;
         }
         let opA = parseInt(data.toString());
-        if (opA < 0 || opA > 3) { // Error in A, B wins
+        if (!(opA >= 0 && opA <= 3)) { // Error in A, B wins
             this.exit = true;
             this.record.push({user: 1, operation: data, valid: false});
             errors.push({player: 1, msg: "Unexpected output " + opA.toString() + "!"});
@@ -133,7 +133,7 @@ Match.prototype.execute = function(callback) {
             return;
         }
         let opB = parseInt(data.toString());
-        if (opB < 0 || opB > 3) { // Error in A, B wins
+        if (!(opB >= 0 && opB <= 4)) { // Error in A, B wins
             this.exit = true;
             this.record.push({user: 2, operation: data, valid: false});
             errors.push({player: 2, msg: "Unexpected output " + opB.toString() + "!"});
@@ -142,7 +142,6 @@ Match.prototype.execute = function(callback) {
             callback({winner: 1, error: errors});
             return;
         }
-        console.log(opB);
         status = this.game.makeTurn("B", opB);
         if(!status) { // B loses
             this.exit = true;
