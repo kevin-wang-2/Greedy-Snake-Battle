@@ -142,6 +142,7 @@ Match.prototype.execute = function(callback) {
             callback({winner: 1, error: errors});
             return;
         }
+        console.log(opB);
         status = this.game.makeTurn("B", opB);
         if(!status) { // B loses
             this.exit = true;
