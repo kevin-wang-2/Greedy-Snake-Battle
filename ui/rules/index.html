@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" class="page--scoreboard">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/general.css"/>
+    <title>Rules - Greedy Snake Lab</title>
+</head>
+<body>
+<nav class="nav">
+    <div class="row">
+        <div class="column nav__container">
+            <ol class="nav__container-item">
+                <li>
+                    <a href="/" class="nav__logo">GreedySnakeJudge</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__item">Scoreboard</a>
+                </li>
+                <li>
+                    <a href="/submission" class="nav__item">Submission</a>
+                </li>
+                <li>
+                    <a href="/match" class="nav__item">Match</a>
+                </li>
+                <li>
+                    <a href="/rules" class="nav__item active">Rules</a>
+                </li>
+            </ol>
+            <ol class="nav__container-item">
+                <li id="signin">
+                    <a href="/oauth/login" class="nav__button">Sign in</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+</nav>
+<div class="slideout-panel" id="panel">
+    <div class="main">
+        <div class="row">
+            <div class="columns">
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">
+                            <span class="icon icon-warning text-red"></span>
+                            Version 1.2.0
+                        </h1>
+                    </div>
+                    <div class="section__body">
+                        <p>Happy VG101 Lab8!</p>
+                        <p>- Version 1.1.0 Added compile error display</p>
+                        <p>- Version 1.2.0 Modified gaming mechanism and update rule page</p>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section__header">
+                        <h1 class="section__title">VG101 Lab8 Rules</h1>
+                    </div>
+                    <hr>
+                    <div class="section__body content-markdown" style="display:block;">
+                        <h3><b>Game Description</b></h3>
+                        <p>Greedy snake is a well-known computer game, and the lab prepares a modified version of greedy
+                            snake that can enable two AI players to compete within a battle field.
+                            The AIs will battle in a 50-by-50 field, and take move one by one. Before one AI makes a
+                            move, the system will check if it crashes itself, other snake or is out of boundary.
+                            If these circumstances happened the snake loses the game and the opponent wins. If none of
+                            the two snakes fail within 2000 rounds, the game will end and the player with longer snake
+                            wins.</p>
+                        <h3><b>Interface and Usage</b></h3>
+                        <p>Greedy Snake Lab has provided you with a functional interface, including a bug-free vector
+                            class, and a standard main function used in the OJ server. To finish this lab, you need to
+                            implement the game_t class and finish judge function to decide your own move. The
+                            implementations should be written in a file called lab8.cpp and should be uploaded to the OJ
+                            server
+                            in text form.</p>
+                        <p>The standard vector class includes the necessary arithmetic operations, standard
+                            constructors, and related functions including vector normalize and length function.
+                            The snakes are stored in the form of a STL vector containing our vector2D instance to
+                            present each position it has taken on the chessboard. Direction is an enum class, which
+                            contains UP, DOWN, LEFT and RIGHT elements.</p>
+                        <p>The related files could be downloaded from canvas.</p>
+                        <h3><b>Debugging</b></h3>
+                        <p>The given main.cpp contains a basic main function but it's not human-friendly. If you want to
+                            debug your program, you could create your own main.cpp and test your game_t class with that
+                            main function because your game_t class
+                            is supposed to be correct with any valid implementation of main.cpp.</p>
+                        <p>Do not submit malicious codes or try to hack the server using and methods. If you do so, you
+                            will have a large deduction in this lab.</p>
+                        <h3><b>Due Date</b></h3>
+                        <p>Submission of this lab will continue until 12/13 11:59pm, then all the score will be restored
+                            and formal competition will start.</p>
+                        <h3><b>Specifications</b></h3>
+                        <ul style="list-style-type: decimal">
+                            <li>
+                                To present the snakes in a chessboard, we note the top-left grid as the grid 0-0, whose
+                                corresponding vector is (0, 0). The x value increases in from left to right and the y
+                                value increases from top to bottom.
+                            </li>
+                            <li>
+                                If a program has any runtime errors or has accidentally exited if neither of the players
+                                has been lost, this player automatically loses and his opponent automatically wins.
+                            </li>
+                            <li>
+                                Any operation has the maximum time limit of 1 second, it any player has not made an
+                                operation within 1 second, he automatically loses and his opponent automatically wins.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+</div>
+<script src="js/jQuery.js"></script>
+<script src="/general.js"></script>
+</body>
+</html>

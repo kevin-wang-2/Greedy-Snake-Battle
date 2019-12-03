@@ -69,7 +69,7 @@ app.use((req, res, next) => {
             else
                 res.end(fs.readFileSync(config["uiRoot"] + url.parse(req.url).pathname));
         else if (fs.existsSync(config["uiRoot"] + url.parse(req.url).pathname + "/index.html"))
-            res.render(config["uiRoot"] + url.parse(req.url).pathname + "index.html");
+            res.render(config["uiRoot"] + url.parse(req.url).pathname + "/index.html");
         else next();
     } else next();
 });
