@@ -26,18 +26,18 @@ Game.prototype.makeTurn = function(user, op) {
     let direction = opValue[op];
     if(user === "A") {
         let newTail = this.snakeA.last().add(direction);
+        if (this.snakeA.indexOf(newTail) !== -1) return 0;
         if(newTail.x !== this.food.x || newTail.y !== this.food.y) {
             this.snakeA.dequeue();
         } else this.regenerateFood();
-        if(this.snakeA.indexOf(newTail) !== -1) return 0;
         this.snakeA.enqueue(newTail);
         return this.snakeB.indexOf(newTail) === -1 && !outOfBorder(this, newTail);
     } else {
         let newTail = this.snakeB.last().add(direction);
+        if (this.snakeB.indexOf(newTail) !== -1) return 0;
         if(newTail.x !== this.food.x || newTail.y !== this.food.y) {
             this.snakeB.dequeue();
         } else this.regenerateFood();
-        if(this.snakeB.indexOf(newTail) !== -1) return 0;
         this.snakeB.enqueue(newTail);
         return this.snakeA.indexOf(newTail) === -1 && !outOfBorder(this, newTail);
     }
