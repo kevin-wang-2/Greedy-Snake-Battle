@@ -31,7 +31,7 @@ exports.setRouter = function (app) {
 
     app.use("/match", (req, res) => {
         let path = url.parse(req.url).path.split("/");
-        let matchId = parseInt(path[path.length - 1]);
+        let matchId = path[path.length - 1];
         let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         let curMatch = {};

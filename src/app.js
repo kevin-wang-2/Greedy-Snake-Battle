@@ -6,6 +6,7 @@ const fs = require("fs");
 const Match = require("./execute.js").Match;
 const utils = require("./util.js");
 const app = require("./httpServer.js").app;
+const crypto = require('crypto');
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
@@ -33,7 +34,8 @@ let matchCnt = 0;
         matchCnt++;
         match.execute((result) => {
             let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
-            let matchName = (new Date()).valueOf().toString() + ".match";
+            const md5 = crypto.createHash('md5');
+            let matchName = md5.update((new Date()).valueOf().toString()).digest("hex").toString() + ".match";
             matchData.push({userA: uidA, userB: uidB, result: result, details: matchName});
             if (matchData.length > config["maxMatchRecord"]) {
                 fs.unlinkSync(config["matchRoot"] + matchData.shift()["details"]);
