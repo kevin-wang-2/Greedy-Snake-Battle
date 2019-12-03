@@ -39,11 +39,32 @@ exports.setRouter = function (app) {
             if (userData[req.session.userID]["permission"] === 3) {
                 let path = url.parse(req.url).path.split("/");
                 let uid = path[1];
-                console.log(uid);
                 for (let i = 0; i < userData.length; i++) {
                     if (userData[i]["studentID"] === uid) {
                         userData[i]["password"] = "";
                         fs.writeFileSync(config["userData"], JSON.stringify(userData));
+                        res.end("success");
+                        return;
+                    }
+                }
+                res.end("No user found!");
+            } else {
+                res.end("[]");
+            }
+        }
+    });
+
+    app.use("/su", (req, res) => {
+        if (!req.session.token) {
+            res.end("[]");
+        } else {
+            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            if (userData[req.session.userID]["permission"] === 3) {
+                let path = url.parse(req.url).path.split("/");
+                let uid = path[1];
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["studentID"] === uid) {
+                        req.session.userID = i;
                         res.end("success");
                         return;
                     }
