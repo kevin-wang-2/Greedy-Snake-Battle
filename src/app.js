@@ -45,13 +45,13 @@ let matchCnt = 0;
             let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
             let scoreA = userData[uidA]["score"], scoreB = userData[uidB]["score"];
             if(result.winner === 1) {
-                userData[uidA]["score"] += Math.ceil(0.5 * (Math.max(scoreB - scoreA, 1)));
-                userData[uidB]["score"] -= Math.ceil(0.5 * (Math.max(scoreB - scoreA, 1)));
+                userData[uidA]["score"] += Math.ceil(0.5 * (Math.max(scoreB - scoreA, 2)));
+                userData[uidB]["score"] -= Math.ceil(0.5 * (Math.max(scoreB - scoreA, 2)));
                 userData[uidA]["win"]++;
                 userData[uidB]["lose"]++;
             } else if (result.winner === 2) {
-                userData[uidA]["score"] -= Math.ceil(0.5 * (Math.max(scoreA - scoreB, 1)));
-                userData[uidB]["score"] += Math.ceil(0.5 * (Math.max(scoreA - scoreB, 1)));
+                userData[uidA]["score"] -= Math.ceil(0.5 * (Math.max(scoreA - scoreB, 2)));
+                userData[uidB]["score"] += Math.ceil(0.5 * (Math.max(scoreA - scoreB, 2)));
                 userData[uidB]["win"]++;
                 userData[uidA]["lose"]++;
             } else {
