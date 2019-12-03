@@ -59,13 +59,35 @@ exports.setRouter = function (app) {
             res.end("[]");
         } else {
             let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3) {
+            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
                 let path = url.parse(req.url).path.split("/");
                 let uid = path[1];
                 for (let i = 0; i < userData.length; i++) {
                     if (userData[i]["studentID"] === uid) {
+                        req.session.originalUserID = req.session.userID;
                         req.session.userID = i;
                         res.end("success");
+                        return;
+                    }
+                }
+                res.end("No user found!");
+            } else {
+                res.end("[]");
+            }
+        }
+    });
+
+    app.use("/checkUser", (req, res) => {
+        if (!req.session.token) {
+            res.end("[]");
+        } else {
+            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+                let path = url.parse(req.url).path.split("/");
+                let uid = path[1];
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["studentID"] === uid) {
+                        res.end(i.toString() + ":" + JSON.stringify(userData[i]));
                         return;
                     }
                 }
