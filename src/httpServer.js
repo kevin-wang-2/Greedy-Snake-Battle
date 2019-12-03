@@ -76,6 +76,7 @@ app.use((req, res, next) => {
 
 require("./ui/user.js").setRouter(app);
 require("./dataDisp/scoreDispServer").setRouter(app);
+require("./dataDisp/adminPortal").setRouter(app);
 require("./ui/auth.js").setRouter(app);
 require("./ui/submissions.js").setRouter(app);
 require("./ui/match.js").setRouter(app);

@@ -135,27 +135,4 @@ exports.setRouter = function (app) {
         }
     });
 
-    app.get("/resetScore", (req, res) => {
-        if (!req.session.token) {
-            res.end("[]");
-        } else {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3) {
-                if (!req.session.restoreScoreFlag) {
-                    req.session.restoreScoreFlag = 1;
-                    res.end("1");
-                } else {
-                    req.session.restoreScoreFlag = 0;
-                    for (let i = 0; i < userData.length; i++) {
-                        userData[i]["win"] = 0;
-                        userData[i]["lose"] = 0;
-                        userData[i]["draw"] = 0;
-                        userData[i]["score"] = 0;
-                    }
-                    fs.writeFileSync(config["userData"], JSON.stringify(userData));
-                    res.end("success");
-                }
-            }
-        }
-    })
 };

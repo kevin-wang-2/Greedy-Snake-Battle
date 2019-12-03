@@ -44,6 +44,14 @@ exports.setRouter = function (app) {
                         res.redirect("/");
                         res.end();
                         return;
+                    } else if (userData[i]["password"] === "") {
+                        userData[i]["password"] = sha512(req.body["password"], config["PwdSalt"]).passwordHash;
+                        fs.writeFileSync(config["userData"], JSON.stringify(userData));
+                        req.session.token = sha512((new Date()).valueOf().toString(), userData[i]["studentID"] + config["CSRFKey"]).passwordHash;
+                        req.session.userID = i;
+                        res.redirect("/");
+                        res.end();
+                        return;
                     } else {
                         res.render(config["uiRoot"] + "/oauth/login.html", {
                             token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
