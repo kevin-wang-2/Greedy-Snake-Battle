@@ -154,6 +154,7 @@ Match.prototype.execute = function(callback) {
         this.record.push({user:2, operation:opB, valid:true, food: [this.game.food.x, this.game.food.y]});
         this.roundsLeft--;
         if (this.roundsLeft < 0) {
+            errors.push({player: 0, msg: "Round Limit Exceeded!"});
             this.exit = true;
             this.procA.kill();
             this.procB.kill();
