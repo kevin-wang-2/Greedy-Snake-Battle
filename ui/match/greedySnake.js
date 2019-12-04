@@ -141,7 +141,32 @@ prepare = function (document, $, matchId) {
                 }
             };
             generateBoard();
-            setInterval(update, 50);
+            var fps = 20;
+            var animation = setInterval(update, 1000 / fps);
+
+            $("[name=step-pause]").click(function () {
+                if (animation !== 0) {
+                    clearInterval(animation);
+                    animation = 0;
+                    $("[name=step-pause]").html("Go");
+                } else {
+                    animation = setInterval(update, 1000 / fps);
+                    $("[name=step-pause]").html("Pause");
+                }
+            });
+
+            $("[name=step-go]").click(function () {
+                if (isFinite($("[name=step-speed]").val())) {
+                    fps = parseInt($("[name=step-speed]").val());
+                    if (animation !== 0) {
+                        clearInterval(animation);
+                        animation = setInterval(update, 1000 / fps);
+                    }
+                } else {
+                    $("[name=step-speed]").val(fps.toString());
+                }
+            })
+
         })
     }
 

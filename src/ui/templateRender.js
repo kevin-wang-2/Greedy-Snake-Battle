@@ -1,6 +1,6 @@
 exports.generatePager = function (pageCnt, curPage, baseLink) {
     let ret = "";
-    if (curPage !== 1) { // First and Prev
+    if (curPage !== 1 && pageCnt > 1) { // First and Prev
         ret += "<li>\n" +
             "    <a class=\"pager__item first link\" href=\"/" + baseLink + "/1\">« First</a>\n" +
             "  </li>" +
@@ -47,7 +47,7 @@ exports.generatePager = function (pageCnt, curPage, baseLink) {
                 "  </li>";
         }
     }
-    if (curPage !== pageCnt) { // First and Prev
+    if (curPage !== pageCnt && pageCnt > 1) { // First and Prev
         ret += "<li>\n" +
             "    <a class=\"pager__item next link\" href=\"" + baseLink + "/" + (curPage + 1).toString() + "\">Next ›</a>\n" +
             "  </li>" +

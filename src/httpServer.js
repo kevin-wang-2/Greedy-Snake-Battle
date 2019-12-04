@@ -57,8 +57,22 @@ app.use("/user/.ui", (req, res) => {
 app.use("/submission/.ui", (req, res) => {
     res.header(404);
 });
+
 app.use("/match/.ui", (req, res) => {
     res.header(404);
+});
+
+app.use("/admin", (req, res, next) => {
+    if (!req.session.token) {
+        res.header(404);
+    } else {
+        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+            next();
+        } else {
+            res.header(404);
+        }
+    }
 });
 
 app.use((req, res, next) => {

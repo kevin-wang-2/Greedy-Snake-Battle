@@ -62,9 +62,15 @@ exports.setRouter = function (app) {
                 return cur.data["userA"] === req.session.userID || cur.data["userB"] === req.session.userID;
             });
         }
+        if (urlquery["search"]) {
+            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            matchData = unorderFilter(matchData, (cur) => {
+                return userData[cur["data"]["userA"]]["name"].indexOf(urlquery["search"]) !== -1 || userData[cur["data"]["userB"]]["name"].indexOf(urlquery["search"]) !== -1;
+            });
+        }
 
         let pageCnt = Math.floor(matchData.length / 20);
-        res.send(generatePager(pageCnt, 1, "match/list"));
+        res.send(generatePager(pageCnt, parseInt(urlquery["page"]), "match/list"));
 
     })
 };

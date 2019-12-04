@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal - Greedy Snake</title>
+</head>
+<body>
+<div id="panel">
+</div>
+<script src="/js/jQuery.js"></script>
+<script>
+    $(document).ready(function () {
+        var fnChange = function (event) {
+            if (event.keyCode === 13) {
+                elt = $("<p></p>").html("> ").append($("<span></span>").addClass("command").attr({"contenteditable": true}).keydown(fnChange));
+                var cmd = $("span[contenteditable=true]").html();
+                $("span.command").attr({"contenteditable": false});
+                $.ajax({
+                    type: "get",
+                    url: "/" + cmd.split(" ").join("/"),
+                    async: false,
+                    success: function (data) {
+                        $("#panel").append($("<p></p>").html(data))
+                    }
+                });
+                $("#panel").append(elt);
+            }
+        };
+        elt = $("<p></p>").html("> ").append($("<span></span>").addClass("command").attr({"contenteditable": true}).keydown(fnChange));
+        $("#panel").append(elt);
+    })
+</script>
+</body>
+</html>

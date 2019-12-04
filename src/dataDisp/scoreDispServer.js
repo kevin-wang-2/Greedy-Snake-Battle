@@ -6,7 +6,7 @@ const url = require("url");
 const querystring = require('querystring');
 const fs = require("fs");
 const sort = require("../util.js").sort;
-const unorderFilter = require("../util.js").filter;
+const unorderFilter = require("../util.js").unorderFilter;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
@@ -16,23 +16,15 @@ exports.setRouter = function (app) {
         let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         if (urlquery["filter"]) {
-            let filteredMatchData = unorderFilter(matchData, (cur) => {
+            matchData = unorderFilter(matchData, (cur) => {
                 return cur["data"]["userA"] === req.session.userID || cur["data"]["userB"] === req.session.userID;
             });
-            let outputJSON = [];
-            for (let i = (parseInt(urlquery["page"]) - 1) * 20; i < Math.min(parseInt(urlquery["page"]) * 20, filteredMatchData.length); i++) {
-                let user1 = userData[parseInt(matchData[filteredMatchData[i].id]["userA"])];
-                let user2 = userData[parseInt(matchData[filteredMatchData[i].id]["userB"])];
-                outputJSON.push({
-                    matchid: matchData[filteredMatchData[i].id]["details"].split(".")[0],
-                    status: matchData[filteredMatchData[i].id]["result"]["winner"],
-                    user1: {id: user1["uid"], name: user1["name"], rating: user1["score"]}
-                    ,
-                    user2: {id: user2["uid"], name: user2["name"], rating: user2["score"]}
-                });
-            }
-            res.send(JSON.stringify(outputJSON));
-            return;
+        }
+
+        if (urlquery["search"]) {
+            matchData = unorderFilter(matchData, (cur) => {
+                return userData[cur["data"]["userA"]]["name"].indexOf(urlquery["search"]) !== -1 || userData[cur["data"]["userB"]]["name"].indexOf(urlquery["search"]) !== -1;
+            });
         }
 
         let outputJSON = [];
@@ -79,7 +71,9 @@ exports.setRouter = function (app) {
 
     app.get("/getScoreBoard", (req, res) => {
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-        res.send(JSON.stringify(sort(userData, "score")));
+        res.send(JSON.stringify(unorderFilter(sort(userData, "score"), (data) => {
+            return data["data"]["bin"] !== "";
+        })));
     });
 
     app.get("/getUserInfo", (req, res) => {
@@ -124,12 +118,11 @@ exports.setRouter = function (app) {
         } else {
             let urlquery = querystring.parse(url.parse(req.url).query);
             let submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
-            console.log(submissionData[urlquery["id"]]);
             let cur = {
                 status: submissionData[urlquery["id"]]["status"],
                 time: submissionData[urlquery["id"]]["time"],
                 compiler: submissionData[urlquery["id"]]["compiler"],
-                errorMsg: submissionData[urlquery["id"]]["error"]["stderr"].replace(/..\/submission\/.*\//g, "").replace(/\n/g, "<br>")
+                errorMsg: submissionData[urlquery["id"]]["error"]["stderr"].replace(eval("/" + config["submissionRoot"].replace(/\//g, "\\/") + ".*\\//g"), "").replace(/\n/g, "<br>")
             };
             res.send(JSON.stringify(cur));
         }

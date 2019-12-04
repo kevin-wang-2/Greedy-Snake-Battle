@@ -39,6 +39,38 @@ prepare = function (document, $, page) {
         {style: "u2win", text: "Opponent Win"}
     ];
 
+    function getMatchList() {
+        var getPageLink = "/getMatchList?page=" + page.toString();
+        var getPagerLink = "/resetPager?page=" + page.toString();
+        if ($("#filter").is(":checked")) {
+            getPageLink += "&filter=1";
+            getPagerLink += "&filter=1";
+        }
+        if ($("[name=match-search]").val() !== "") {
+            getPageLink += "&search=" + $("[name=match-search]").val();
+            getPagerLink += "&search=" + $("[name=match-search]").val();
+        }
+        $.get(getPageLink, function (data) {
+            $("#datagrid").html("");
+            var JSONData = JSON.parse(data);
+            for (var i = 0; i < JSONData.length; i++) {
+                var cur = trtemplate.replace(/\${status_style}/g, errCodeList[parseInt(JSONData[i]["status"])]["style"])
+                    .replace(/\${matchid}/g, JSONData[i]["matchid"])
+                    .replace(/\${status}/g, errCodeList[parseInt(JSONData[i]["status"])]["text"])
+                    .replace(/\${user1_id}/g, JSONData[i]["user1"]["id"])
+                    .replace(/\${user2_id}/g, JSONData[i]["user2"]["id"])
+                    .replace(/\${user1_name}/g, JSONData[i]["user1"]["name"])
+                    .replace(/\${user2_name}/g, JSONData[i]["user2"]["name"])
+                    .replace(/\${user1_rating}/g, JSONData[i]["user1"]["rating"])
+                    .replace(/\${user2_rating}/g, JSONData[i]["user2"]["rating"]);
+                $("#datagrid").html($("#datagrid").html() + cur);
+            }
+        });
+        $.get(getPagerLink, function (data) {
+            $(".pager").html(data);
+        });
+    }
+
     $.get("/getMatchList?page=" + page.toString(), function (data) {
         var JSONData = JSON.parse(data);
         for (var i = 0; i < JSONData.length; i++) {
@@ -55,53 +87,29 @@ prepare = function (document, $, page) {
         }
     });
 
+    var oldpage;
+
     $(document).ready(function () {
-            var filter_on = false;
-            $("#filter").click(function () {
-                if (!filter_on) {
-                    $.get("/getMatchList?filter=1&page=1", function (data) {
-                        $("#datagrid").html("");
-                        var JSONData = JSON.parse(data);
-                        for (var i = 0; i < JSONData.length; i++) {
-                            var cur = trtemplate.replace(/\${status_style}/g, errCodeList[parseInt(JSONData[i]["status"])]["style"])
-                                .replace(/\${matchid}/g, JSONData[i]["matchid"])
-                                .replace(/\${status}/g, errCodeList[parseInt(JSONData[i]["status"])]["text"])
-                                .replace(/\${user1_id}/g, JSONData[i]["user1"]["id"])
-                                .replace(/\${user2_id}/g, JSONData[i]["user2"]["id"])
-                                .replace(/\${user1_name}/g, JSONData[i]["user1"]["name"])
-                                .replace(/\${user2_name}/g, JSONData[i]["user2"]["name"])
-                                .replace(/\${user1_rating}/g, JSONData[i]["user1"]["rating"])
-                                .replace(/\${user2_rating}/g, JSONData[i]["user2"]["rating"]);
-                            $("#datagrid").html($("#datagrid").html() + cur);
-                        }
-                    });
-                    $.get("/resetPager?filter=1", function (data) {
-                        $(".pager").html(data);
-                    });
-                    filter_on = true;
-                } else {
-                    $.get("/getMatchList?page=1", function (data) {
-                        $("#datagrid").html("");
-                        var JSONData = JSON.parse(data);
-                        for (var i = 0; i < JSONData.length; i++) {
-                            var cur = trtemplate.replace(/\${status_style}/g, errCodeList[parseInt(JSONData[i]["status"])]["style"])
-                                .replace(/\${matchid}/g, JSONData[i]["matchid"])
-                                .replace(/\${status}/g, errCodeList[parseInt(JSONData[i]["status"])]["text"])
-                                .replace(/\${user1_id}/g, JSONData[i]["user1"]["id"])
-                                .replace(/\${user2_id}/g, JSONData[i]["user2"]["id"])
-                                .replace(/\${user1_name}/g, JSONData[i]["user1"]["name"])
-                                .replace(/\${user2_name}/g, JSONData[i]["user2"]["name"])
-                                .replace(/\${user1_rating}/g, JSONData[i]["user1"]["rating"])
-                                .replace(/\${user2_rating}/g, JSONData[i]["user2"]["rating"]);
-                            $("#datagrid").html($("#datagrid").html() + cur);
-                        }
-                    });
-                    $.get("/resetPager", function (data) {
-                        $(".pager").html(data);
-                    });
-                    filter_on = false;
-                }
-            })
+        $("#filter").click(function () {
+            if ($("#filter").is(":checked")) {
+                oldpage = page;
+                page = 1;
+            } else {
+                page = oldpage;
+            }
+            getMatchList();
+        });
+
+        $("[name=match-search]").change(function () {
+            getMatchList();
+        });
         }
-    )
+    );
+
+    var update = function () {
+        getMatchList();
+        $("#refreshTime").html((new Date()).toTimeString());
+        setTimeout(update, 6000);
+    };
+    update();
 };

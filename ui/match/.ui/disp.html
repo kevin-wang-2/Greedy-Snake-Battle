@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="layout--basic page--match_list hasjs">
+<html lang="en" class="layout--basic page--round_detail hasjs">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/vendor.css"/>
     <link rel="stylesheet" href="/css/general.css"/>
     <title>View a match - Greedy Snake Lab</title>
 </head>
@@ -42,13 +43,15 @@
                     <div class="section__header">
                         <h1 class="section__title">
                             <span class="icon icon-warning text-red"></span>
-                            Version 1.2.0
+                            Version 1.2.2
                         </h1>
                     </div>
                     <div class="section__body">
                         <p>Happy VG101 Lab8!</p>
                         <p>- Version 1.1.0 Added compile error display</p>
                         <p>- Version 1.2.0 Modified gaming mechanism and update rule page</p>
+                        <p>- Version 1.2.2 Added filter for match and match display controls, hide non-submission
+                            players from scoreboard</p>
                     </div>
                 </div>
                 <div class="section">
@@ -102,6 +105,18 @@
                         </ol>{{/if}}
                     </div>
                     <div class="section__body">Exit caused by: {{exit}}
+                    </div>
+                    <div class="section__body" name="step-toolbar" layout="row center-left" style="">
+                        <div>
+                            <button class="button" name="step-pause">Pause</button>
+                        </div>
+                        <div class="separator"></div>
+                        <div>Speed:</div>
+                        <div><input type="number" class="textbox" name="step-speed" value="20"></div>
+                        <div> Frame / Second</div>
+                        <div>
+                            <button class="primary button" name="step-go">Apply</button>
+                        </div>
                     </div>
                     <div class="section__body round">
                         <a class="text-challenger">{{user1}}: <span id="user1op"></span></a>
