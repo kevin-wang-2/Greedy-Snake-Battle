@@ -97,6 +97,7 @@ Match.prototype.execute = function(callback) {
             return;
         }
         let opA = parseInt(data.toString());
+        console.log(opA);
         if (!(opA >= 0 && opA <= 3)) { // Error in A, B wins
             this.exit = true;
             this.record.push({user: 1, operation: data, valid: false});
@@ -132,6 +133,7 @@ Match.prototype.execute = function(callback) {
             callback({winner:1, error:errors});
             return;
         }
+        console.log(opB);
         let opB = parseInt(data.toString());
         if (!(opB >= 0 && opB <= 4)) { // Error in A, B wins
             this.exit = true;
