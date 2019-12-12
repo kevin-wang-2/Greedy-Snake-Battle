@@ -133,8 +133,8 @@ Match.prototype.execute = function(callback) {
             callback({winner:1, error:errors});
             return;
         }
-        console.log(opB);
         let opB = parseInt(data.toString());
+        console.log(opB);
         if (!(opB >= 0 && opB <= 4)) { // Error in A, B wins
             this.exit = true;
             this.record.push({user: 2, operation: data, valid: false});
