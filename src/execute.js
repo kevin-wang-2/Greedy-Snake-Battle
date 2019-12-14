@@ -18,8 +18,8 @@ function Match() {
 Match.prototype.setExecutable = function(A, B) {
     this.binA = A;
     this.binB = B;
-    this.procA = spawn(this.binA, ["-r"]);
-    this.procB = spawn(this.binB, ["-r"]);
+    this.procA = spawn("sudo", ["-u", "runner", this.binA, "-r"]);
+    this.procB = spawn("sudo", ["-u", "runner", this.binB, "-r"]);
 
     this.procA.stdin.on("error", (msg) => {console.log("A:" + msg);});
     this.procB.stdin.on("error", (msg) => {console.log("B:" + msg);});
