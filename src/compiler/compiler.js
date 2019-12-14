@@ -4,6 +4,10 @@
 
 let exec = require("child_process").exec;
 
+const fs = require("fs");
+
+const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
+
 let compiler = {
     "c++98": "g++ %source -o %exec -std=c++98 -lm -Werror -Wall %flags",
     "c++11": "g++ %source -o %exec -std=c++11 -lm -Werror -Wall %flags",
@@ -25,7 +29,7 @@ Compiler.prototype.addSource = function (route) {
 Compiler.prototype.compile = function (execName, callback) {
     let baseCommand = compiler[this.language];
     baseCommand = baseCommand.replace(/%source/, this.sourceList.join(" "));
-    baseCommand = baseCommand.replace(/%exec/, "../bin/" + execName);
+    baseCommand = baseCommand.replace(/%exec/, config["binRoot"] + execName);
     baseCommand = baseCommand.replace(/%flags/, this.compileFlags);
     exec(baseCommand, (error, stdout, stderr) => {
         if (error) {
