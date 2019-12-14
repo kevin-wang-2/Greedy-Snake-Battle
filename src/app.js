@@ -13,7 +13,7 @@ const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 let matchCnt = 0;
 
 (function begin() {
-    app.listen(8000);
+    app.listen(80);
 
     setInterval(() => {
         if(matchCnt > config["maxMatchCnt"]) return;
