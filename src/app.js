@@ -41,7 +41,7 @@ let matchCnt = 0;
                 try {
                     fs.unlinkSync(config["matchRoot"] + matchData.shift()["details"]);
                 } catch (e) {
-                    matchData.shift()["details"];
+                    matchData.shift();
                 }
             }
             fs.writeFile(config["matchRoot"] + matchName, JSON.stringify(match.record), () => {
@@ -50,19 +50,20 @@ let matchCnt = 0;
 
             let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
             let scoreA = userData[uidA]["score"], scoreB = userData[uidB]["score"];
+            let eta = 0.04;
             if(result.winner === 1) {
-                userData[uidA]["score"] += Math.ceil(2 + 0.05 * (Math.max(scoreB - scoreA, 0)));
-                userData[uidB]["score"] -= Math.ceil(2 + 0.05 * (Math.max(scoreB - scoreA, 0)));
+                userData[uidA]["score"] += Math.ceil(eta * (50 + Math.max(scoreB - scoreA, 0)));
+                userData[uidB]["score"] -= Math.ceil(eta * (50 + Math.max(scoreB - scoreA, 0)));
                 userData[uidA]["win"]++;
                 userData[uidB]["lose"]++;
             } else if (result.winner === 2) {
-                userData[uidA]["score"] -= Math.ceil(2 + 0.05 * (Math.max(scoreA - scoreB, 0)));
-                userData[uidB]["score"] += Math.ceil(2 + 0.05 * (Math.max(scoreA - scoreB, 0)));
+                userData[uidA]["score"] -= Math.ceil(eta * (50 + Math.max(scoreA - scoreB, 0)));
+                userData[uidB]["score"] += Math.ceil(eta * (50 + Math.max(scoreA - scoreV, 0)));
                 userData[uidB]["win"]++;
                 userData[uidA]["lose"]++;
             } else {
-                userData[uidA]["score"] += Math.ceil(0.05 * (scoreB - scoreA));
-                userData[uidB]["score"] -= Math.ceil(0.05 * (scoreB - scoreA));
+                userData[uidA]["score"] += Math.ceil(eta * (scoreB - scoreA));
+                userData[uidB]["score"] -= Math.ceil(eta * (scoreB - scoreA));
                 userData[uidB]["draw"]++;
                 userData[uidA]["draw"]++;
             }
