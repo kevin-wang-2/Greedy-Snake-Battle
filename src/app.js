@@ -58,7 +58,7 @@ let matchCnt = 0;
                 userData[uidB]["lose"]++;
             } else if (result.winner === 2) {
                 userData[uidA]["score"] -= Math.ceil(eta * (50 + Math.max(scoreA - scoreB, 0)));
-                userData[uidB]["score"] += Math.ceil(eta * (50 + Math.max(scoreA - scoreV, 0)));
+                userData[uidB]["score"] += Math.ceil(eta * (50 + Math.max(scoreA - scoreB, 0)));
                 userData[uidB]["win"]++;
                 userData[uidA]["lose"]++;
             } else {
