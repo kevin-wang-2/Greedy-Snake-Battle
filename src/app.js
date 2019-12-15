@@ -13,7 +13,7 @@ const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 let matchCnt = 0;
 
 (function begin() {
-    app.listen(80);
+    app.listen(8000);
 
     setInterval(() => {
         if(matchCnt > config["maxMatchCnt"]) return;
@@ -50,7 +50,7 @@ let matchCnt = 0;
 
             let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
             let scoreA = userData[uidA]["score"], scoreB = userData[uidB]["score"];
-            let eta = 0.04;
+            let eta = 0.05;
             if(result.winner === 1) {
                 userData[uidA]["score"] += Math.ceil(eta * (50 + Math.max(scoreB - scoreA, 0)));
                 userData[uidB]["score"] -= Math.ceil(eta * (50 + Math.max(scoreB - scoreA, 0)));
