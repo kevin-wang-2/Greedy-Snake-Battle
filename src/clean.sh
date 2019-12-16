@@ -1,0 +1,1 @@
+pm2 stop 1;killall -u runner --older-than 1M;pm2 start run.js
