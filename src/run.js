@@ -16,7 +16,12 @@ let cleanflag = false;
 
 (function begin() {
     setInterval(() => {
-        if ((matchCnt > config["maxMatchCnt"]) || cleanflag) return;
+        if ((matchCnt > config["maxMatchCnt"]) || cleanflag && !(matchCnt === 0 && cleanflag)) return;
+        if ((matchCnt === 0) && cleanflag) {
+            console.log(">>> Clean");
+            execSync("killall -u runner");
+            cleanflag = false;
+        }
         let match = new Match(); // Initialize a match
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         let uidA, uidB;
