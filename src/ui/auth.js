@@ -5,6 +5,8 @@ let crypto = require("crypto");
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
+let globalUserData = [];
+
 function sha512(password, salt) {
     let hash = crypto.createHmac("sha512", salt);
     hash.update(password);
@@ -19,7 +21,13 @@ exports.setRouter = function (app) {
     app.post("/oauth", (req, res) => {
         let params = querystring.parse(url.parse(req.url).query);
         if (params["fake"]) {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
             for (let i = 0; i < userData.length; i++) {
                 if (userData[i]["studentID"] === req.body["jaccountID"]) {
                     req.session.token = "f" + req.body["jaccountID"];
@@ -35,7 +43,13 @@ exports.setRouter = function (app) {
                 }
             }
         } else {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
             for (let i = 0; i < userData.length; i++) {
                 if (userData[i]["studentID"] === req.body["studentId"].toString()) {
                     if (sha512(req.body["password"], config["PwdSalt"]).passwordHash === userData[i]["password"]) {

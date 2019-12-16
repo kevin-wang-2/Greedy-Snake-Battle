@@ -10,11 +10,27 @@ const unorderFilter = require("../util.js").unorderFilter;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
+let globalMatchData = [];
+let globalUserData = [];
+let globalSubmissionData = [];
+
 exports.setRouter = function (app) {
     app.get("/getMatchList", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
-        let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let matchData, userData;
+        try {
+            matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
+            globalMatchData = matchData;
+        } catch (e) {
+            matchData = globalMatchData;
+        }
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
+
         if (urlquery["filter"]) {
             matchData = unorderFilter(matchData, (cur) => {
                 return cur["data"]["userA"] === req.session.userID || cur["data"]["userB"] === req.session.userID;
@@ -70,7 +86,14 @@ exports.setRouter = function (app) {
     });
 
     app.get("/getScoreBoard", (req, res) => {
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
+
         res.send(JSON.stringify(unorderFilter(sort(userData, "score"), (data) => {
             return data["data"]["bin"] !== "";
         })));
@@ -78,7 +101,13 @@ exports.setRouter = function (app) {
 
     app.get("/getUserInfo", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
         if (urlquery["userID"]) {
             res.end(JSON.stringify(userData[parseInt(urlquery["userID"].toString())]));
         } else {
@@ -91,8 +120,20 @@ exports.setRouter = function (app) {
             res.end("[]");
         } else {
             let userID = req.session.userID;
-            let submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            let submissionData;
+            try {
+                submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
+                globalSubmissionData = submissionData;
+            } catch (e) {
+                submissionData = globalSubmissionData;
+            }
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
             let retJSON = [];
 
             for (let i = 0; i < submissionData.length; i++) {
@@ -117,7 +158,13 @@ exports.setRouter = function (app) {
             res.end("[]");
         } else {
             let urlquery = querystring.parse(url.parse(req.url).query);
-            let submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
+            let submissionData;
+            try {
+                submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
+                globalSubmissionData = submissionData;
+            } catch (e) {
+                submissionData = globalSubmissionData;
+            }
             let cur = {
                 status: submissionData[urlquery["id"]]["status"],
                 time: submissionData[urlquery["id"]]["time"],

@@ -6,10 +6,19 @@ const unorderFilter = require("../util.js").unorderFilter;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
+let globalMatchData = [];
+let globalUserData = [];
+
 exports.setRouter = function (app) {
     const matchList = (req, res) => {
         let path = url.parse(req.url).path.split("/");
-        let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
+        let matchData;
+        try {
+            matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
+            globalMatchData = matchData;
+        } catch (e) {
+            matchData = globalMatchData;
+        }
         let pageCnt = Math.floor(matchData.length / 20);
 
         if (path[path.length - 1] === "match" || path.length < 2 || (path.length >= 2 && path[path.length - 1] === "")) {
@@ -32,8 +41,20 @@ exports.setRouter = function (app) {
     app.use("/match", (req, res) => {
         let path = url.parse(req.url).path.split("/");
         let matchId = path[path.length - 1];
-        let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let matchData;
+        try {
+            matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
+            globalMatchData = matchData;
+        } catch (e) {
+            matchData = globalMatchData;
+        }
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
         let curMatch = {};
         for (let i = 0; i < matchData.length; i++) {
             if (matchData[i]["details"] === matchId + ".match") {
@@ -55,7 +76,13 @@ exports.setRouter = function (app) {
 
     app.get("/resetPager", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
-        let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
+        let matchData;
+        try {
+            matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
+            globalMatchData = matchData;
+        } catch (e) {
+            matchData = globalMatchData;
+        }
 
         if (urlquery["filter"]) {
             matchData = unorderFilter(matchData, (cur) => {

@@ -5,6 +5,8 @@ const compile = require("../compiler/compileTools.js").compile;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
+let globalUserData = [];
+
 exports.setRouter = function (app) {
     app.get("/submission", (req, res) => {
         res.render(config["uiRoot"] + "/submission/.ui/mysubmissions.html");
@@ -12,7 +14,13 @@ exports.setRouter = function (app) {
 
     app.get("/submission/submit", (req, res) => {
         let uid = req.session.userID;
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
         let cur = userData[uid];
         res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
             compiler: cur["default-compiler"],
@@ -34,7 +42,13 @@ exports.setRouter = function (app) {
         }
 
         let uid = req.session.userID;
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
         let cur = userData[uid];
         res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
             compiler: cur["default-compiler"],

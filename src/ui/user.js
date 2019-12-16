@@ -3,10 +3,18 @@ const fs = require("fs");
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
+let globalUserData = [];
+
 exports.setRouter = function (app) {
     app.get("/user/profile", (req, res) => {
         let uid = req.session.userID;
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
         let cur = userData[uid];
         res.render(config["uiRoot"] + "/user/.ui/profile.html", {
             studentID: cur["studentID"],
@@ -19,7 +27,13 @@ exports.setRouter = function (app) {
 
     app.post("/user/profile", (req, res) => {
         let uid = req.session.userID;
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
         userData[uid]["realname"] = req.body["realname"].replace(/\</g, "&lt;")
             .replace(/\>/g, "&gt;");
         userData[uid]["name"] = req.body["name"].replace(/\</g, "&lt;")
@@ -48,7 +62,13 @@ exports.setRouter = function (app) {
 
     app.post("/user/settings", (req, res) => {
         let uid = req.session.userID;
-        let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
         userData[uid]["default-compiler"] = req.body["compiler"];
         fs.writeFileSync(config["userData"], JSON.stringify(userData));
         let cur = userData[uid];

@@ -14,7 +14,6 @@ let matchCnt = 0;
 
 (function begin() {
     setInterval(() => {
-        console.log(matchCnt);
         if (matchCnt > config["maxMatchCnt"]) return;
         let match = new Match(); // Initialize a match
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
