@@ -7,10 +7,13 @@
                 $("#signin").find("a").html(jsonData["studentID"] + "\n" +
                     "        (" + jsonData["name"] + ")\n" +
                     "        <span class=\"text-red\">(" + permissionList[jsonData["permission"]] + ")</span>\n")
-                    .attr("href", "/user/profile")
-                    .removeClass("nav__button")
-                    .addClass("nav__item");
+                    .attr("href", "/user/profile");
             });
+        } else {
+            $("#signin").find("a").html("Sign in")
+                .attr("href", "/oauth/login")
+                .removeClass("nav__item")
+                .addClass("nav__button");
         }
     });
     $(document).ready(function () {
