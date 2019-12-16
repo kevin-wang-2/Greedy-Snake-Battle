@@ -71,7 +71,7 @@ let cleanflag = false;
             }
             matchCnt--;
             if (matchCnt < 0) matchCnt = 0;
-            if (matchCnt === 0) {
+            if ((matchCnt === 0) && cleanflag) {
                 console.log(">>> Clean");
                 execSync("killall -u runner");
                 cleanflag = false;
