@@ -45,16 +45,16 @@ Match.prototype.execute = function(callback) {
 
     this.tleA = () => {
         this.exit = true;
-        spawn("kill", [this.procA.pid]);
-        spawn("kill", [this.procB.pid]);
+        spawn("kill", ["-9", this.procA.pid]);
+        spawn("kill", ["-9", this.procB.pid]);
         clearTimeout(this.tle);
         errors.push({player: 1, msg: "Time Limit Exceeded"});
         callback({winner: 2, error: errors});
     };
     this.tleB = () => {
         this.exit = true;
-        spawn("kill", [this.procA.pid]);
-        spawn("kill", [this.procB.pid]);
+        spawn("kill", ["-9", this.procA.pid]);
+        spawn("kill", ["-9", this.procB.pid]);
         clearTimeout(this.tle);
         errors.push({player: 2, msg: "Time Limit Exceeded"});
         callback({winner: 1, error: errors});
