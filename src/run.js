@@ -73,7 +73,7 @@ let cleanflag = false;
             if (matchCnt < 0) matchCnt = 0;
             if (matchCnt === 0) {
                 console.log(">>> Clean");
-                execSync("killall", ["-u runner"]);
+                execSync("killall -u runner");
                 cleanflag = false;
             }
             fs.writeFileSync(config["userData"], JSON.stringify(userData));
