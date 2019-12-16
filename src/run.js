@@ -72,6 +72,7 @@ let cleanflag = false;
             matchCnt--;
             if (matchCnt < 0) matchCnt = 0;
             if (matchCnt === 0) {
+                console.log(">>> Clean");
                 exec("killall", ["-u", "runner"]);
                 cleanflag = false;
             }
