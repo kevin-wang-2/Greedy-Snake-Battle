@@ -6,15 +6,17 @@ const fs = require("fs");
 const Match = require("./execute.js").Match;
 const utils = require("./util.js");
 const app = require("./httpServer.js").app;
+const exec = require("child_process").exec;
 const crypto = require('crypto');
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
 let matchCnt = 0;
+let cleanflag = false;
 
 (function begin() {
     setInterval(() => {
-        if (matchCnt > config["maxMatchCnt"]) return;
+        if ((matchCnt > config["maxMatchCnt"]) || cleanflag) return;
         let match = new Match(); // Initialize a match
         let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
         let uidA, uidB;
@@ -68,8 +70,17 @@ let matchCnt = 0;
                 userData[uidA]["draw"]++;
             }
             matchCnt--;
+            if (matchCnt < 0) matchCnt = 0;
+            if (matchCnt === 0) {
+                exec("killall", ["-u", "runner"]);
+                cleanflag = false;
+            }
             fs.writeFileSync(config["userData"], JSON.stringify(userData));
         })
     }, 1000);
+
+    setInterval(() => {
+        cleanflag = true;
+    }, 60000)
 
 })();
