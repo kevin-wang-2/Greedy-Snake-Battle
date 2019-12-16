@@ -62,6 +62,8 @@ Match.prototype.execute = function(callback) {
     this.onerrA = (code, signal) => {
         if (this.exit) return;
         this.exit = true;
+        spawn("kill", [this.procA.pid]);
+        spawn("kill", [this.procB.pid]);
         spawn("kill", ["-9", this.procA.pid]);
         spawn("kill", ["-9", this.procB.pid]);
         clearTimeout(this.tle);
@@ -75,6 +77,8 @@ Match.prototype.execute = function(callback) {
     this.onerrB = (code, signal) => {
         if (this.exit) return;
         this.exit = true;
+        spawn("kill", [this.procA.pid]);
+        spawn("kill", [this.procB.pid]);
         spawn("kill", ["-9", this.procA.pid]);
         spawn("kill", ["-9", this.procB.pid]);
         clearTimeout(this.tle);
@@ -95,6 +99,8 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user:1, operation:data, valid:false});
             errors.push({player: 1, msg: "Unexpected output " + data.toString() + "!"});
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             spawn("kill", ["-9", this.procA.pid]);
             spawn("kill", ["-9", this.procB.pid]);
             callback({winner:2, error:errors});
@@ -105,6 +111,8 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user: 1, operation: data, valid: false});
             errors.push({player: 1, msg: "Unexpected output " + opA.toString() + "!"});
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             spawn("kill", ["-9", this.procA.pid]);
             spawn("kill", ["-9", this.procB.pid]);
             callback({winner: 2, error: errors});
@@ -113,6 +121,8 @@ Match.prototype.execute = function(callback) {
         status = this.game.makeTurn("A", opA);
         if(!status) { // A loses
             this.exit = true;
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             spawn("kill", ["-9", this.procA.pid]);
             spawn("kill", ["-9", this.procB.pid]);
             this.record.push({user:1, operation:opA, valid:false, food: [this.game.food.x, this.game.food.y]});
@@ -131,6 +141,8 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user:2, operation:data, valid:false});
             errors.push({player: 2, msg: "Unexpected output " + data.toString() + "!"});
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             spawn("kill", ["-9", this.procA.pid]);
             spawn("kill", ["-9", this.procB.pid]);
             callback({winner:1, error:errors});
@@ -141,6 +153,8 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user: 2, operation: data, valid: false});
             errors.push({player: 2, msg: "Unexpected output " + opB.toString() + "!"});
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             spawn("kill", ["-9", this.procA.pid]);
             spawn("kill", ["-9", this.procB.pid]);
             callback({winner: 1, error: errors});
@@ -149,6 +163,8 @@ Match.prototype.execute = function(callback) {
         status = this.game.makeTurn("B", opB);
         if(!status) { // B loses
             this.exit = true;
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             spawn("kill", ["-9", this.procA.pid]);
             spawn("kill", ["-9", this.procB.pid]);
             this.record.push({user:2, operation:opB, valid:false, food: [this.game.food.x, this.game.food.y]});
@@ -160,6 +176,8 @@ Match.prototype.execute = function(callback) {
         if (this.roundsLeft < 0) {
             errors.push({player: 0, msg: "Round Limit Exceeded!"});
             this.exit = true;
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             spawn("kill", ["-9", this.procA.pid]);
             spawn("kill", ["-9", this.procB.pid]);
             if (this.game.snakeA.getLength() > this.game.snakeB.getLength())
