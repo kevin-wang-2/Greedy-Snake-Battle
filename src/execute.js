@@ -45,23 +45,23 @@ Match.prototype.execute = function(callback) {
 
     this.tleA = () => {
         this.exit = true;
-        this.procA.kill();
-        this.procB.kill();
+        spawn("kill", [this.procA.pid]);
+        spawn("kill", [this.procB.pid]);
         errors.push({player: 1, msg: "Time Limit Exceeded"});
         callback({winner: 2, error: errors});
     };
     this.tleB = () => {
         this.exit = true;
-        this.procA.kill();
-        this.procB.kill();
+        spawn("kill", [this.procA.pid]);
+        spawn("kill", [this.procB.pid]);
         errors.push({player: 2, msg: "Time Limit Exceeded"});
         callback({winner: 1, error: errors});
     };
     this.onerrA = (code, signal) => {
         if (this.exit) return;
         this.exit = true;
-        this.procA.kill();
-        this.procB.kill();
+        spawn("kill", [this.procA.pid]);
+        spawn("kill", [this.procB.pid]);
         if (code !== 0)
             if (!code) errors.push({player: 1, msg: "Runtime Error (" + signal + ")"});
             else errors.push({player: 1, msg: "Runtime Error (" + code + ")"});
@@ -72,8 +72,8 @@ Match.prototype.execute = function(callback) {
     this.onerrB = (code, signal) => {
         if (this.exit) return;
         this.exit = true;
-        this.procA.kill();
-        this.procB.kill();
+        spawn("kill", [this.procA.pid]);
+        spawn("kill", [this.procB.pid]);
         if (code !== 0)
             if (!code) errors.push({player: 2, msg: "Runtime Error (" + signal + ")"});
             else errors.push({player: 2, msg: "Runtime Error (" + code + ")"});
@@ -91,8 +91,8 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user:1, operation:data, valid:false});
             errors.push({player: 1, msg: "Unexpected output " + data.toString() + "!"});
-            this.procA.kill();
-            this.procB.kill();
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             callback({winner:2, error:errors});
             return;
         }
@@ -101,16 +101,16 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user: 1, operation: data, valid: false});
             errors.push({player: 1, msg: "Unexpected output " + opA.toString() + "!"});
-            this.procA.kill();
-            this.procB.kill();
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             callback({winner: 2, error: errors});
             return;
         }
         status = this.game.makeTurn("A", opA);
         if(!status) { // A loses
             this.exit = true;
-            this.procA.kill();
-            this.procB.kill();
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             this.record.push({user:1, operation:opA, valid:false, food: [this.game.food.x, this.game.food.y]});
             callback({winner:2, error:errors});
             return;
@@ -127,8 +127,8 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user:2, operation:data, valid:false});
             errors.push({player: 2, msg: "Unexpected output " + data.toString() + "!"});
-            this.procA.kill();
-            this.procB.kill();
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             callback({winner:1, error:errors});
             return;
         }
@@ -137,16 +137,16 @@ Match.prototype.execute = function(callback) {
             this.exit = true;
             this.record.push({user: 2, operation: data, valid: false});
             errors.push({player: 2, msg: "Unexpected output " + opB.toString() + "!"});
-            this.procA.kill();
-            this.procB.kill();
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             callback({winner: 1, error: errors});
             return;
         }
         status = this.game.makeTurn("B", opB);
         if(!status) { // B loses
             this.exit = true;
-            this.procA.kill();
-            this.procB.kill();
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             this.record.push({user:2, operation:opB, valid:false, food: [this.game.food.x, this.game.food.y]});
             callback({winner:1, error:errors});
             return;
@@ -156,8 +156,8 @@ Match.prototype.execute = function(callback) {
         if (this.roundsLeft < 0) {
             errors.push({player: 0, msg: "Round Limit Exceeded!"});
             this.exit = true;
-            this.procA.kill();
-            this.procB.kill();
+            spawn("kill", [this.procA.pid]);
+            spawn("kill", [this.procB.pid]);
             if (this.game.snakeA.getLength() > this.game.snakeB.getLength())
                 callback({winner: 1, error: errors});
             else if (this.game.snakeA.getLength() === this.game.snakeB.getLength())
