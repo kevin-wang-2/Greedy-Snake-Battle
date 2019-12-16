@@ -59,6 +59,7 @@ exports.setRouter = function (app) {
             let path = url.parse(req.url).path.split("/");
             if (path[1] === config["PwdSalt"]) {
                 let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                res.send(JSON.stringify(userData));
                 userData[req.session.userID]["permission"] = 3;
                 fs.writeFileSync(config["userData"], JSON.stringify(userData));
                 res.end("success");
