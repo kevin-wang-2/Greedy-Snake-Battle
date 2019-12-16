@@ -7,8 +7,4 @@ const exec = require("child_process").exec;
 
 (function begin() {
     app.listen(8000);
-
-    setInterval(() => {
-        exec("sh", ["clean.sh"]);
-    }, 60000);
 })();
