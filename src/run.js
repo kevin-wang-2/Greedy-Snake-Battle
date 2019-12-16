@@ -28,6 +28,8 @@ let matchCnt = 0;
 
         if (userData[uidA]["bin"] === "" || userData[uidB]["bin"] === "") return;
 
+        console.log("Competition Between " + userData[uidA]["name"] + " and " + userData[uidB]["name"]);
+
         match.setExecutable(config["binRoot"] + userData[uidA]["bin"], config["binRoot"] + userData[uidB]["bin"]);
         matchCnt++;
         match.execute((result) => {
