@@ -6,7 +6,7 @@ const fs = require("fs");
 const Match = require("./execute.js").Match;
 const utils = require("./util.js");
 const app = require("./httpServer.js").app;
-const exec = require("child_process").exec;
+const execSync = require("child_process").execSync;
 const crypto = require('crypto');
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
@@ -73,7 +73,7 @@ let cleanflag = false;
             if (matchCnt < 0) matchCnt = 0;
             if (matchCnt === 0) {
                 console.log(">>> Clean");
-                exec("killall", ["-u", "runner"]);
+                execSync("killall", ["-u", "runner"]);
                 cleanflag = false;
             }
             fs.writeFileSync(config["userData"], JSON.stringify(userData));
