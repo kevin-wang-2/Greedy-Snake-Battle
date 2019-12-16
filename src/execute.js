@@ -47,6 +47,7 @@ Match.prototype.execute = function(callback) {
         this.exit = true;
         spawn("kill", [this.procA.pid]);
         spawn("kill", [this.procB.pid]);
+        clearTimeout(this.tle);
         errors.push({player: 1, msg: "Time Limit Exceeded"});
         callback({winner: 2, error: errors});
     };
@@ -54,6 +55,7 @@ Match.prototype.execute = function(callback) {
         this.exit = true;
         spawn("kill", [this.procA.pid]);
         spawn("kill", [this.procB.pid]);
+        clearTimeout(this.tle);
         errors.push({player: 2, msg: "Time Limit Exceeded"});
         callback({winner: 1, error: errors});
     };
@@ -62,6 +64,7 @@ Match.prototype.execute = function(callback) {
         this.exit = true;
         spawn("kill", [this.procA.pid]);
         spawn("kill", [this.procB.pid]);
+        clearTimeout(this.tle);
         if (code !== 0)
             if (!code) errors.push({player: 1, msg: "Runtime Error (" + signal + ")"});
             else errors.push({player: 1, msg: "Runtime Error (" + code + ")"});
@@ -74,6 +77,7 @@ Match.prototype.execute = function(callback) {
         this.exit = true;
         spawn("kill", [this.procA.pid]);
         spawn("kill", [this.procB.pid]);
+        clearTimeout(this.tle);
         if (code !== 0)
             if (!code) errors.push({player: 2, msg: "Runtime Error (" + signal + ")"});
             else errors.push({player: 2, msg: "Runtime Error (" + code + ")"});
