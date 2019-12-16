@@ -84,7 +84,7 @@ Match.prototype.execute = function(callback) {
     this.procA.on("exit", this.onerrA);
     this.procB.on("exit", this.onerrB);
 
-    this.tle = setTimeout(this.tleA, 1000);
+    this.tle = setTimeout(this.tleA, 2000);
     fnProcA = (data) => {
         clearTimeout(this.tle);
         if(/^[0-3]$/.test(data.toString())) { // Error in A, B wins
@@ -118,7 +118,7 @@ Match.prototype.execute = function(callback) {
         this.record.push({user:1, operation:opA, valid:true, food: [this.game.food.x, this.game.food.y]});
         this.procA.stdin.write([this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
         this.procB.stdin.write(opA.toString() + "\n" + [this.game.food.x.toString(), this.game.food.y.toString()].join(" ") + "\n");
-        this.tle = setTimeout(this.tleB, 1000);
+        this.tle = setTimeout(this.tleB, 2000);
         this.procB.stdout.once("data", fnProcB);
     };
     fnProcB = (data) => {
