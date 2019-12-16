@@ -3,12 +3,12 @@
  */
 
 const app = require("./httpServer.js").app;
-const execSync = require("child_process").execSync;
+const exec = require("child_process").exec;
 
 (function begin() {
     app.listen(8000);
 
     setInterval(() => {
-        execSync("sh", ["clean.sh"]);
+        exec("sh", ["clean.sh"]);
     }, 60000);
 })();
