@@ -123,5 +123,20 @@ exports.setRouter = function (app) {
                 res.end("[]");
             }
         }
-    })
+    });
+
+    app.use("/closeSubmission", (req, res) => {
+        if (!req.session.token) {
+            res.end("[]");
+        } else {
+            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+                let data = JSON.parse(fs.readFileSync("../config/params.json").toString());
+                data["closed"] = true;
+                fs.writeFileSync("../config/params.json", JSON.stringify(data));
+            } else {
+                res.end("[]");
+            }
+        }
+    });
 };

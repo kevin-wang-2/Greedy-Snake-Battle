@@ -25,14 +25,26 @@ exports.setRouter = function (app) {
         res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
             compiler: cur["default-compiler"],
             token: req.session.token.toString(),
-            post: false
+            post: false,
+            late: false
         });
     });
 
     app.post("/submission/submit", (req, res) => {
         if (!req.session.token) {
             res.setHeader(404);
+            return;
         } else {
+            let params = JSON.parse(fs.readFileSync("../config/params.json").toString());
+            if (params["closed"]) {
+                res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
+                    compiler: cur["default-compiler"],
+                    token: req.session.token.toString(),
+                    post: true,
+                    late: true
+                });
+                return;
+            }
             let data = req.body["code"];
             let sourcedir = config["submissionRoot"] + (new Date()).valueOf().toString() + req.session.userID.toString();
             fs.mkdirSync(sourcedir);
@@ -53,7 +65,8 @@ exports.setRouter = function (app) {
         res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
             compiler: cur["default-compiler"],
             token: req.session.token.toString(),
-            post: true
+            post: true,
+            late: false
         });
     });
 

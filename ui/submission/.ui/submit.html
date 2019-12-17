@@ -44,6 +44,15 @@
                     <div class="section__header">
                         <h1 class="section__title">Submit New Brain</h1>
                     </div>
+                    {{if post}}
+                    {{if late}}
+                    <div class="typo">
+                        <blockquote class="success">
+                            Submission channel is closed
+                        </blockquote>
+                    </div>
+                    {{/if}}
+                    {{/if}}
                     <div class="section__body typo">
                         <blockquote class="warn">
                             <ul>
