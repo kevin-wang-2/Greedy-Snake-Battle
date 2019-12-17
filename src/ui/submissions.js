@@ -34,23 +34,6 @@ exports.setRouter = function (app) {
         if (!req.session.token) {
             res.setHeader(404);
             return;
-        } else {
-            let params = JSON.parse(fs.readFileSync("../config/params.json").toString());
-            if (params["closed"]) {
-                res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
-                    compiler: cur["default-compiler"],
-                    token: req.session.token.toString(),
-                    post: true,
-                    late: true
-                });
-                return;
-            }
-            let data = req.body["code"];
-            let sourcedir = config["submissionRoot"] + (new Date()).valueOf().toString() + req.session.userID.toString();
-            fs.mkdirSync(sourcedir);
-            fs.writeFileSync(sourcedir + "/lab8.cpp", data);
-            execSync("cp " + config["submissionRoot"] + "template/* " + sourcedir);
-            compile(req.session.userID, sourcedir, req.body["compiler"]);
         }
 
         let uid = req.session.userID;
@@ -62,6 +45,24 @@ exports.setRouter = function (app) {
             userData = globalUserData;
         }
         let cur = userData[uid];
+
+        let params = JSON.parse(fs.readFileSync("../config/params.json").toString());
+        if (params["closed"]) {
+            res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
+                compiler: cur["default-compiler"],
+                token: req.session.token.toString(),
+                post: true,
+                late: true
+            });
+            return;
+        }
+        let data = req.body["code"];
+        let sourcedir = config["submissionRoot"] + (new Date()).valueOf().toString() + req.session.userID.toString();
+        fs.mkdirSync(sourcedir);
+        fs.writeFileSync(sourcedir + "/lab8.cpp", data);
+        execSync("cp " + config["submissionRoot"] + "template/* " + sourcedir);
+        compile(req.session.userID, sourcedir, req.body["compiler"]);
+
         res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
             compiler: cur["default-compiler"],
             token: req.session.token.toString(),
