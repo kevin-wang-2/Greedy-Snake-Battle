@@ -105,5 +105,23 @@ exports.setRouter = function (app) {
                 res.end("[]");
             }
         }
+    });
+
+    app.use("/setEta", (req, res) => {
+        if (!req.session.token) {
+            res.end("[]");
+        } else {
+            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+                let path = url.parse(req.url).path.split("/");
+                let eta = path[1];
+                let data = JSON.parse(fs.readFileSync("../config/params.json").toString());
+                data["eta"] = eta;
+                fs.writeFileSync("../config/params.json", JSON.stringify(data));
+                fs.writeFileSync("../config/stop", "1");
+            } else {
+                res.end("[]");
+            }
+        }
     })
 };

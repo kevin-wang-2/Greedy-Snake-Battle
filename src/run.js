@@ -5,7 +5,6 @@
 const fs = require("fs");
 const Match = require("./execute.js").Match;
 const utils = require("./util.js");
-const app = require("./httpServer.js").app;
 const execSync = require("child_process").execSync;
 const crypto = require('crypto');
 
@@ -13,9 +12,15 @@ const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
 let matchCnt = 0;
 let cleanflag = false;
+let stopflag = false;
 
 (function begin() {
-    setInterval(() => {
+    let main, clean;
+    main = setInterval(() => {
+        if (fs.readFileSync("../config/stop").toString() === "1") {
+            clearInterval(main);
+            clearInterval(clean);
+        }
         if ((matchCnt > config["maxMatchCnt"]) || cleanflag && !(matchCnt === 0 && cleanflag)) return;
         if ((matchCnt === 0) && cleanflag) {
             console.log(">>> Clean");
@@ -57,7 +62,7 @@ let cleanflag = false;
 
             let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
             let scoreA = userData[uidA]["score"], scoreB = userData[uidB]["score"];
-            let eta = 0.05;
+            let eta = JSON.parse(fs.readFileSync("../config/params.json").toString())["eta"];
             if (result.winner === 1) {
                 userData[uidA]["score"] += Math.ceil(eta * (50 + Math.max(scoreB - scoreA, 0)));
                 userData[uidB]["score"] -= Math.ceil(eta * (50 + Math.max(scoreB - scoreA, 0)));
@@ -76,6 +81,10 @@ let cleanflag = false;
             }
             matchCnt--;
             if (matchCnt < 0) matchCnt = 0;
+            if ((matchCnt === 0) && stopflag) {
+                fs.writeFileSync("../config/stop", "0");
+                execSync("pm2 reload run");
+            }
             if ((matchCnt === 0) && cleanflag) {
                 console.log(">>> Clean");
                 execSync("killall -u runner");
@@ -85,8 +94,8 @@ let cleanflag = false;
         })
     }, 1000);
 
-    setInterval(() => {
+    clean = setInterval(() => {
         cleanflag = true;
-    }, 60000)
+    }, 120000);
 
 })();

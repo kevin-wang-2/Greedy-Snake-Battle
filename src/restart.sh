@@ -1,2 +1,1 @@
-forever stopall
-forever start app.js
+pm2 reload all

@@ -1,1 +1,0 @@
-killall -u runner --older-than 1m
