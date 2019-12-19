@@ -11,7 +11,12 @@ const fs = require("fs");
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 
 exports.compile = function (userID, sourcedir, compiler) {
-    let curCompileData = {userID: userID, compiler: compiler, time: (new Date()).toLocaleTimeString()};
+    let curCompileData = {
+        userID: userID,
+        compiler: compiler,
+        time: (new Date()).toLocaleTimeString(),
+        source: sourcedir
+    };
     let binName = (new Date()).valueOf().toString() + userID.toString();
     (new Compiler(compiler)).addSource(sourcedir + "/lab8.cpp")
         .addSource(sourcedir + "/main.cpp")

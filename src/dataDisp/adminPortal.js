@@ -1,18 +1,34 @@
 const url = require("url");
-const querystring = require('querystring');
 const fs = require("fs");
-const sort = require("../util.js").sort;
-const unorderFilter = require("../util.js").filter;
 
 const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
+
+let globalUserData = [];
 
 exports.setRouter = function (app) {
     app.get("/resetScore", (req, res) => {
         if (!req.session.token) {
             res.end("[]");
         } else {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3) {
+            // TODO: Replace with formal database operation
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
+
+            // TODO: Replace this with formal database operation
+            function findUser(UUID) {
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["uid"] === UUID) return userData[i];
+                }
+            }
+
+            let cur = findUser(req.session.userID);
+
+            if (cur["permission"] === 3) {
                 if (!req.session.restoreScoreFlag) {
                     req.session.restoreScoreFlag = 1;
                     res.end("1");
@@ -35,8 +51,25 @@ exports.setRouter = function (app) {
         if (!req.session.token) {
             res.end("[]");
         } else {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3) {
+            // TODO: Replace with formal database operation
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
+
+            // TODO: Replace this with formal database operation
+            function findUser(UUID) {
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["uid"] === UUID) return userData[i];
+                }
+            }
+
+            let cur = findUser(req.session.userID);
+
+            if (cur["permission"] === 3) {
                 let path = url.parse(req.url).path.split("/");
                 let uid = path[1];
                 for (let i = 0; i < userData.length; i++) {
@@ -58,23 +91,57 @@ exports.setRouter = function (app) {
         if (!req.session.token) {
             res.end("[]");
         } else {
-
             let path = url.parse(req.url).path.split("/");
             if (path[1] === config["PwdSalt"]) {
-                let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-                res.send(JSON.stringify(userData));
-                userData[req.session.userID]["permission"] = 3;
+                // TODO: Replace with formal database operation
+                let userData;
+                try {
+                    userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                    globalUserData = userData;
+                } catch (e) {
+                    userData = globalUserData;
+                }
+
+                // TODO: Replace this with formal database operation
+                let findUser = function (UUID) {
+                    for (let i = 0; i < userData.length; i++) {
+                        if (userData[i]["uid"] === UUID) return i;
+                    }
+                };
+
+                let curIndex = findUser(req.session.userID);
+
+                userData[curIndex]["permission"] = 3;
                 fs.writeFileSync(config["userData"], JSON.stringify(userData));
                 res.end("success");
             }
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+
+            // TODO: Replace with formal database operation
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
+
+            // TODO: Replace this with formal database operation
+            function findUser(UUID) {
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["uid"] === UUID) return userData[i];
+                }
+            }
+
+            let cur = findUser(req.session.userID);
+            let lastUser;
+            if (req.session.originalUserID) lastUser = findUser(req.session.originalUserID);
+            if (cur["permission"] === 3 || lastUser["permission"] === 3) {
                 let path = url.parse(req.url).path.split("/");
                 let uid = path[1];
                 for (let i = 0; i < userData.length; i++) {
                     if (userData[i]["studentID"] === uid) {
                         req.session.originalUserID = req.session.userID;
-                        req.session.userID = i;
+                        req.session.userID = userData[i]["uid"];
                         res.end("success");
                         return;
                     }
@@ -90,8 +157,25 @@ exports.setRouter = function (app) {
         if (!req.session.token) {
             res.end("[]");
         } else {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+            // TODO: Replace with formal database operation
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
+
+            // TODO: Replace this with formal database operation
+            function findUser(UUID) {
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["uid"] === UUID) return userData[i];
+                }
+            }
+
+            let cur = findUser(req.session.userID);
+
+            if (cur["permission"] === 3) {
                 let path = url.parse(req.url).path.split("/");
                 let uid = path[1];
                 for (let i = 0; i < userData.length; i++) {
@@ -111,8 +195,25 @@ exports.setRouter = function (app) {
         if (!req.session.token) {
             res.end("[]");
         } else {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+            // TODO: Replace with formal database operation
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
+
+            // TODO: Replace this with formal database operation
+            function findUser(UUID) {
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["uid"] === UUID) return userData[i];
+                }
+            }
+
+            let cur = findUser(req.session.userID);
+
+            if (cur["permission"] === 3) {
                 let path = url.parse(req.url).path.split("/");
                 let eta = path[1];
                 let data = JSON.parse(fs.readFileSync("../config/params.json").toString());
@@ -129,8 +230,25 @@ exports.setRouter = function (app) {
         if (!req.session.token) {
             res.end("[]");
         } else {
-            let userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
-            if (userData[req.session.userID]["permission"] === 3 || userData[req.session.originalUserID]["permission"] === 3) {
+            // TODO: Replace with formal database operation
+            let userData;
+            try {
+                userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+                globalUserData = userData;
+            } catch (e) {
+                userData = globalUserData;
+            }
+
+            // TODO: Replace this with formal database operation
+            function findUser(UUID) {
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["uid"] === UUID) return userData[i];
+                }
+            }
+
+            let cur = findUser(req.session.userID);
+
+            if (cur["permission"] === 3) {
                 let data = JSON.parse(fs.readFileSync("../config/params.json").toString());
                 data["closed"] = true;
                 fs.writeFileSync("../config/params.json", JSON.stringify(data));

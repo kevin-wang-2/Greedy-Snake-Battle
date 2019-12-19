@@ -17,6 +17,8 @@ let globalSubmissionData = [];
 exports.setRouter = function (app) {
     app.get("/getMatchList", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
+
+        // TODO: Replace with formal database operation
         let matchData, userData;
         try {
             matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
@@ -37,9 +39,16 @@ exports.setRouter = function (app) {
             });
         }
 
+        // TODO: Replace this with formal database operation
+        function findUser(UUID) {
+            for (let i = 0; i < userData.length; i++) {
+                if (userData[i]["userID"] === UUID) return userData[i];
+            }
+        }
+
         if (urlquery["search"]) {
             matchData = unorderFilter(matchData, (cur) => {
-                return userData[cur["data"]["userA"]]["name"].indexOf(urlquery["search"]) !== -1 || userData[cur["data"]["userB"]]["name"].indexOf(urlquery["search"]) !== -1;
+                return findUser(cur["data"]["userA"])["name"].indexOf(urlquery["search"]) !== -1 || findUser(cur["data"]["userB"])["name"].indexOf(urlquery["search"]) !== -1;
             });
         }
 
@@ -61,6 +70,7 @@ exports.setRouter = function (app) {
 
     app.get("/getMatchDetail", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
+
         let data;
         try {
             data = JSON.parse(fs.readFileSync(config["matchRoot"] + urlquery["match"]).toString());
@@ -86,6 +96,7 @@ exports.setRouter = function (app) {
     });
 
     app.get("/getScoreBoard", (req, res) => {
+        // TODO: Replace with formal database operation
         let userData;
         try {
             userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -101,6 +112,7 @@ exports.setRouter = function (app) {
 
     app.get("/getUserInfo", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
+        // TODO: Replace with formal database operation
         let userData;
         try {
             userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -108,8 +120,16 @@ exports.setRouter = function (app) {
         } catch (e) {
             userData = globalUserData;
         }
+
+        // TODO: Replace this with formal database operation
+        function findUser(UUID) {
+            for (let i = 0; i < userData.length; i++) {
+                if (userData[i]["uid"] === UUID) return userData[i];
+            }
+        }
+
         if (urlquery["userID"]) {
-            res.end(JSON.stringify(userData[parseInt(urlquery["userID"].toString())]));
+            res.end(JSON.stringify(findUser(urlquery["userID"].toString())));
         } else {
             res.end();
         }
@@ -120,6 +140,8 @@ exports.setRouter = function (app) {
             res.end("[]");
         } else {
             let userID = req.session.userID;
+
+            // TODO: Replace with formal database operation
             let submissionData;
             try {
                 submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
@@ -134,6 +156,14 @@ exports.setRouter = function (app) {
             } catch (e) {
                 userData = globalUserData;
             }
+
+            // TODO: Replace this with formal database operation
+            function findUser(UUID) {
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i]["uid"] === UUID) return userData[i];
+                }
+            }
+
             let retJSON = [];
 
             for (let i = 0; i < submissionData.length; i++) {
@@ -141,7 +171,7 @@ exports.setRouter = function (app) {
                     let cur = {
                         status: submissionData[i]["status"],
                         time: submissionData[i]["time"],
-                        username: userData[req.session.userID]["name"],
+                        username: findUser(req.session.userID)["name"],
                         compiler: submissionData[i]["compiler"],
                         id: i
                     };
@@ -158,6 +188,8 @@ exports.setRouter = function (app) {
             res.end("[]");
         } else {
             let urlquery = querystring.parse(url.parse(req.url).query);
+
+            // TODO: Replace with formal database operation
             let submissionData;
             try {
                 submissionData = JSON.parse(fs.readFileSync(config["submissionData"]).toString());
@@ -165,6 +197,7 @@ exports.setRouter = function (app) {
             } catch (e) {
                 submissionData = globalSubmissionData;
             }
+
             let cur = {
                 status: submissionData[urlquery["id"]]["status"],
                 time: submissionData[urlquery["id"]]["time"],

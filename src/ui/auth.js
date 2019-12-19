@@ -21,6 +21,7 @@ exports.setRouter = function (app) {
     app.post("/oauth", (req, res) => {
         let params = querystring.parse(url.parse(req.url).query);
         if (params["fake"]) {
+            // In test environment
             let userData;
             try {
                 userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -43,6 +44,8 @@ exports.setRouter = function (app) {
                 }
             }
         } else {
+            // In Production Environment
+            // TODO: Substitute with formal database operation
             let userData;
             try {
                 userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -50,19 +53,23 @@ exports.setRouter = function (app) {
             } catch (e) {
                 userData = globalUserData;
             }
+
+            // Find User and authenticate
             for (let i = 0; i < userData.length; i++) {
                 if (userData[i]["studentID"] === req.body["studentId"].toString()) {
                     if (sha512(req.body["password"], config["PwdSalt"]).passwordHash === userData[i]["password"]) {
                         req.session.token = sha512((new Date()).valueOf().toString(), userData[i]["studentID"] + config["CSRFKey"]).passwordHash;
-                        req.session.userID = i;
+                        req.session.userID = userData[i]["uid"];
                         res.redirect("/");
                         res.end();
                         return;
                     } else if (userData[i]["password"] === "") {
+                        // After reset
+                        // TODO: Write formal password reset page
                         userData[i]["password"] = sha512(req.body["password"], config["PwdSalt"]).passwordHash;
                         fs.writeFileSync(config["userData"], JSON.stringify(userData));
                         req.session.token = sha512((new Date()).valueOf().toString(), userData[i]["studentID"] + config["CSRFKey"]).passwordHash;
-                        req.session.userID = i;
+                        req.session.userID = userData[i]["uid"];
                         res.redirect("/");
                         res.end();
                         return;
@@ -76,6 +83,9 @@ exports.setRouter = function (app) {
                 }
             }
 
+            // Register for a new user from the student list
+            // TODO: Add another channel to allow guest registration
+            const md5 = crypto.createHash("md5");
             let studentList = JSON.parse(fs.readFileSync(config["studentList"]).toString());
             for (let i = 0; i < studentList.length; i++) {
                 if (studentList[i]["studentID"] === req.body["studentId"]) {
@@ -83,7 +93,7 @@ exports.setRouter = function (app) {
                         studentID: studentList[i]["studentID"],
                         realname: studentList[i]["name"],
                         name: studentList[i]["name"],
-                        uid: userData.length,
+                        uid: md5.update(studentList[i]["studentID"]).digest(), // Use the hash of student ID to create fake UUID
                         win: 0,
                         draw: 0,
                         lose: 0,
@@ -103,6 +113,7 @@ exports.setRouter = function (app) {
                 }
             }
 
+            // Show failure message
             res.render(config["uiRoot"] + "/oauth/login.html", {
                 token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
                 fail: true

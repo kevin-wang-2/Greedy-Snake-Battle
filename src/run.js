@@ -13,6 +13,7 @@ const config = JSON.parse(fs.readFileSync("../config/config.json").toString());
 let matchCnt = 0;
 let cleanflag = false;
 let stopflag = false;
+let restartflag = false;
 
 (function begin() {
     let main, clean;
@@ -20,7 +21,14 @@ let stopflag = false;
         if (fs.readFileSync("../config/stop").toString() === "1") {
             clearInterval(main);
             clearInterval(clean);
+            stopflag = true;
         }
+        if (fs.readFileSync("../config/stop").toString() === "2") {
+            clearInterval(main);
+            clearInterval(clean);
+            restartflag = true;
+        }
+        console.log(matchCnt);
         if ((matchCnt > config["maxMatchCnt"]) || cleanflag && !(matchCnt === 0 && cleanflag)) return;
         if ((matchCnt === 0) && cleanflag) {
             console.log(">>> Clean");
@@ -46,9 +54,15 @@ let stopflag = false;
         matchCnt++;
         match.execute((result) => {
             let matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString());
+            let curUserData = JSON.parse(fs.readFileSync(config["userData"]).toString());
             const md5 = crypto.createHash('md5');
             let matchName = md5.update((new Date()).valueOf().toString()).digest("hex").toString() + ".match";
-            matchData.push({userA: uidA, userB: uidB, result: result, details: matchName});
+            matchData.push({
+                userA: curUserData[uidA]["uid"],
+                userB: curUserData[uidB]["uid"],
+                result: result,
+                details: matchName
+            });
             if (matchData.length > config["maxMatchRecord"]) {
                 try {
                     fs.unlinkSync(config["matchRoot"] + matchData.shift()["details"]);
@@ -82,6 +96,10 @@ let stopflag = false;
             matchCnt--;
             if (matchCnt < 0) matchCnt = 0;
             if ((matchCnt === 0) && stopflag) {
+                fs.writeFileSync("../config/stop", "0");
+                execSync("pm2 stop run");
+            }
+            if ((matchCnt === 0) && restartflag) {
                 fs.writeFileSync("../config/stop", "0");
                 execSync("pm2 reload run");
             }

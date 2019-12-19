@@ -12,6 +12,8 @@ let globalUserData = [];
 exports.setRouter = function (app) {
     const matchList = (req, res) => {
         let path = url.parse(req.url).path.split("/");
+
+        // TODO: Change it into formal database operation
         let matchData;
         try {
             matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
@@ -41,6 +43,8 @@ exports.setRouter = function (app) {
     app.use("/match", (req, res) => {
         let path = url.parse(req.url).path.split("/");
         let matchId = path[path.length - 1];
+
+        // TODO: Change it into formal database operation
         let matchData;
         try {
             matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();
@@ -55,6 +59,7 @@ exports.setRouter = function (app) {
         } catch (e) {
             userData = globalUserData;
         }
+
         let curMatch = {};
         for (let i = 0; i < matchData.length; i++) {
             if (matchData[i]["details"] === matchId + ".match") {
@@ -62,8 +67,21 @@ exports.setRouter = function (app) {
                 break;
             }
         }
-        let user1 = userData[curMatch["userA"]];
-        let user2 = userData[curMatch["userB"]];
+
+        if (curMatch === {}) {
+            res.status(404);
+            return;
+        }
+
+        // TODO: Replace this with formal database operation
+        function findUser(UUID) {
+            for (let i = 0; i < userData.length; i++) {
+                if (userData[i]["uid"] === UUID) return userData[i];
+            }
+        }
+
+        let user1 = findUser(curMatch["userA"]);
+        let user2 = findUser(curMatch["userB"]);
 
         res.render(config["uiRoot"] + "/match/.ui/disp.html", {
             user1: user1["name"],
@@ -76,6 +94,8 @@ exports.setRouter = function (app) {
 
     app.get("/resetPager", (req, res) => {
         let urlquery = querystring.parse(url.parse(req.url).query);
+
+        // TODO: Replace this with formal database operation
         let matchData;
         try {
             matchData = JSON.parse(fs.readFileSync(config["matchData"]).toString()).reverse();

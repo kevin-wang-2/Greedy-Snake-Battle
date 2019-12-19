@@ -14,6 +14,8 @@ exports.setRouter = function (app) {
 
     app.get("/submission/submit", (req, res) => {
         let uid = req.session.userID;
+
+        // TODO: Replace with formal database operation
         let userData;
         try {
             userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -21,7 +23,16 @@ exports.setRouter = function (app) {
         } catch (e) {
             userData = globalUserData;
         }
-        let cur = userData[uid];
+
+        // TODO: Replace this with formal database operation
+        function findUser(UUID) {
+            for (let i = 0; i < userData.length; i++) {
+                if (userData[i]["uid"] === UUID) return userData[i];
+            }
+        }
+
+        let cur = findUser(uid);
+
         res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
             compiler: cur["default-compiler"],
             token: req.session.token.toString(),
@@ -32,11 +43,13 @@ exports.setRouter = function (app) {
 
     app.post("/submission/submit", (req, res) => {
         if (!req.session.token) {
-            res.setHeader(404);
+            res.status(404);
             return;
         }
 
         let uid = req.session.userID;
+
+        // TODO: Replace with formal database operation
         let userData;
         try {
             userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
@@ -44,8 +57,17 @@ exports.setRouter = function (app) {
         } catch (e) {
             userData = globalUserData;
         }
-        let cur = userData[uid];
 
+        // TODO: Replace this with formal database operation
+        function findUser(UUID) {
+            for (let i = 0; i < userData.length; i++) {
+                if (userData[i]["uid"] === UUID) return userData[i];
+            }
+        }
+
+        let cur = findUser(uid);
+
+        // Set when submission is closed
         let params = JSON.parse(fs.readFileSync("../config/params.json").toString());
         if (params["closed"]) {
             res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
@@ -56,13 +78,17 @@ exports.setRouter = function (app) {
             });
             return;
         }
+
+        // Start compilation
         let data = req.body["code"];
         let sourcedir = config["submissionRoot"] + (new Date()).valueOf().toString() + req.session.userID.toString();
+        // Copy directory
         fs.mkdirSync(sourcedir);
         fs.writeFileSync(sourcedir + "/lab8.cpp", data);
         execSync("cp " + config["submissionRoot"] + "template/* " + sourcedir);
         compile(req.session.userID, sourcedir, req.body["compiler"]);
 
+        // Render sucess Page
         res.render(config["uiRoot"] + "/submission/.ui/submit.html", {
             compiler: cur["default-compiler"],
             token: req.session.token.toString(),
