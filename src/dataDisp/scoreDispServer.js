@@ -54,8 +54,8 @@ exports.setRouter = function (app) {
 
         let outputJSON = [];
         for (let i = (parseInt(urlquery["page"]) - 1) * 20; i < Math.min(parseInt(urlquery["page"]) * 20, matchData.length); i++) {
-            let user1 = userData[parseInt(matchData[i]["userA"])];
-            let user2 = userData[parseInt(matchData[i]["userB"])];
+            let user1 = findUser(matchData[i]["userA"]);
+            let user2 = findUser(matchData[i]["userB"]);
             outputJSON.push({
                 matchid: matchData[i]["details"].split(".")[0],
                 status: matchData[i]["result"]["winner"],
