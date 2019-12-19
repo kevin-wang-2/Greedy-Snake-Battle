@@ -42,7 +42,7 @@ exports.setRouter = function (app) {
         // TODO: Replace this with formal database operation
         function findUser(UUID) {
             for (let i = 0; i < userData.length; i++) {
-                if (userData[i]["userID"] === UUID) return userData[i];
+                if (userData[i]["uid"] === UUID) return userData[i];
             }
         }
 
