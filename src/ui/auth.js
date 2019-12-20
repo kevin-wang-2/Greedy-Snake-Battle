@@ -38,7 +38,7 @@ exports.setRouter = function (app) {
                 } else {
                     res.render(config["uiRoot"] + "/oauth/login.html", {
                         token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
-                        fail: true
+                        fail: 1
                     });
                     return;
                 }
@@ -76,7 +76,7 @@ exports.setRouter = function (app) {
                     } else {
                         res.render(config["uiRoot"] + "/oauth/login.html", {
                             token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
-                            fail: true
+                            fail: 1
                         });
                         return;
                     }
@@ -106,7 +106,7 @@ exports.setRouter = function (app) {
                     userData.push(curData);
                     fs.writeFileSync(config["userData"], JSON.stringify(userData));
                     req.session.token = sha512((new Date()).valueOf().toString(), studentList[i]["studentID"] + config["CSRFKey"]).passwordHash;
-                    req.session.userID = userData.length - 1;
+                    req.session.userID = md5.update(studentList[i]["studentID"]).digest("hex");
                     res.redirect("/");
                     res.end();
                     return;
@@ -116,7 +116,7 @@ exports.setRouter = function (app) {
             // Show failure message
             res.render(config["uiRoot"] + "/oauth/login.html", {
                 token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
-                fail: true
+                fail: 2
             });
         }
     });
@@ -135,7 +135,7 @@ exports.setRouter = function (app) {
     app.get("/oauth/login", (req, res) => {
         res.render(config["uiRoot"] + "/oauth/login.html", {
             token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
-            fail: false
+            fail: 0
         });
     });
 
@@ -144,4 +144,74 @@ exports.setRouter = function (app) {
         req.session.userID = null;
         res.redirect("/");
     });
+
+    app.get("/oauth/register", (req, res) => {
+        res.render(config["uiRoot"] + "/oauth/register.html", {
+            token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
+            fail: 0
+        });
+    });
+
+    app.post("/oauth/register", (req, res, next) => {
+        if (req.body["password"] !== req.body["confirm"]) {
+            next();
+            return;
+        }
+
+        // 1. Check duplicated username
+        // TODO: Substitute with formal database operation
+        let userData;
+        try {
+            userData = JSON.parse(fs.readFileSync(config["userData"]).toString());
+            globalUserData = userData;
+        } catch (e) {
+            userData = globalUserData;
+        }
+
+        for (let i = 0; i < userData.length; i++) {
+            if (userData[i]["studentID"] === req.body["studentId"]) {
+                res.render(config["uiRoot"] + "/oauth/register.html", {
+                    token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
+                    fail: 1
+                });
+                return;
+            }
+        }
+
+        // 2. Check existed studentID
+        let studentList = JSON.parse(fs.readFileSync(config["studentList"]).toString());
+        for (let i = 0; i < studentList.length; i++) {
+            if (studentList[i]["studentID"] === req.body["studentId"]) {
+                res.render(config["uiRoot"] + "/oauth/register.html", {
+                    token: sha512((new Date()).valueOf().toString(), config["CSRFKey"]).passwordHash,
+                    fail: 2
+                });
+                return;
+            }
+        }
+
+        // 3. Register
+        const md5 = crypto.createHash("md5");
+        let curUid = md5.update(req.body["studentId"].toString()).digest("hex");
+        let curData = {
+            studentID: req.body["studentId"],
+            realname: req.body["realname"],
+            name: req.body["name"],
+            uid: curUid, // Use the hash of student ID to create fake UUID
+            win: 0,
+            draw: 0,
+            lose: 0,
+            score: 0,
+            permission: 1,
+            "default-compiler": "c++17",
+            password: sha512(req.body["password"], config["PwdSalt"]).passwordHash,
+            bin: ""
+        };
+        userData.push(curData);
+        fs.writeFileSync(config["userData"], JSON.stringify(userData));
+        req.session.token = sha512((new Date()).valueOf().toString(), req.body["studentId"] + config["CSRFKey"]).passwordHash;
+        req.session.userID = curUid;
+        res.redirect("/");
+        res.end();
+    })
 };

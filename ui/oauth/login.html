@@ -26,6 +26,11 @@
                     <a href="/rules" class="nav__item">Rules</a>
                 </li>
             </ol>
+            <ol class="nav__container-item">
+                <li>
+                    <a href="/oauth/register" class="nav__button">Register</a>
+                </li>
+            </ol>
         </div>
     </div>
 </nav>
@@ -41,20 +46,28 @@
                         </h1>
                     </div>
                     <div class="section__body">
-                        {{if fail}}
+                        {{if fail == 1}}
                         <div class="typo">
                             <blockquote class="success">
                                 Login Failure.
+                            </blockquote>
+                        </div>
+                        {{else if fail == 2}}
+                        <div class="typo">
+                            <blockquote class="success">
+                                User doesn't exist, it you are not Jigang's student, visit <a href="/oauth/register">here</a>
+                                to register.
                             </blockquote>
                         </div>
                         {{/if}}
                         <form method="post" action="/oauth">
                             <div class="row">
                                 <div class="medium-5 columns">
-                                    <label>Student ID</label>
+                                    <label>Login ID</label>
                                     <input type="text" name="studentId" class="textbox" required="">
                                     <p class="help-text">When you log in for the first time, we will automatically
-                                        create an account for you.</p>
+                                        create an account for you. For Jigang's students, directly use your student ID
+                                        and you will be logged in.</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -66,7 +79,7 @@
                             <div class="row">
                                 <div class="medium-5 columns">
                                     <input type="hidden" name="_csrf" value="{{token}}">
-                                    <button class="primary rounded button" type="submit">Save</button>
+                                    <button class="primary rounded button" type="submit">Sign In</button>
                                 </div>
                             </div>
                         </form>
