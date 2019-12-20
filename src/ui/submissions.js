@@ -1,5 +1,6 @@
 const fs = require("fs");
 const url = require("url");
+const crypto = require('crypto');
 const execSync = require("child_process").execSync;
 const compile = require("../compiler/compileTools.js").compile;
 
@@ -80,8 +81,9 @@ exports.setRouter = function (app) {
         }
 
         // Start compilation
+        let sha1 = crypto.createHash("sha1");
         let data = req.body["code"];
-        let sourcedir = config["submissionRoot"] + (new Date()).valueOf().toString() + req.session.userID.toString();
+        let sourcedir = config["submissionRoot"] + sha1.update((new Date()).valueOf().toString() + req.session.userID.toString()).digest();
         // Copy directory
         fs.mkdirSync(sourcedir);
         fs.writeFileSync(sourcedir + "/lab8.cpp", data);
